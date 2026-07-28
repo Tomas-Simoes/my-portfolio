@@ -1,0 +1,14 @@
+:root {
+  --black-950: #0b0d0f;
+  --black-900: #0e1113;
+  --black-850: #121518;
+  --black-800: #1a1f24;
+  --black-700: #262b30;
+  --text-main: #ede8dc;
+  --text-muted: #8a929b;
+  --orange-600: #d9663d;
+  --orange-500: #d9663d;
+  --orange-400: #e8794e;
+  --orange-glow: rgba(217, 102, 61, 0.12);
+  --line-soft: rgba(38, 43, 48, 0.9);
+}

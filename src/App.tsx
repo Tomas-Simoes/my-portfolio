@@ -1,10 +1,10 @@
 import styles from './App.module.css';
-import { SceneEditor } from './modules/editor/SceneEditor';
+import { GameLauncher } from './modules/launcher/GameLauncher';
 
 export default function App() {
   return (
     <main className={styles.app}>
-      <SceneEditor />
+      <GameLauncher />
     </main>
   );
 }
