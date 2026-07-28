@@ -289,7 +289,6 @@
   display: none;
 }
 
-.cardStatus,
 .cardCategory {
   position: absolute;
   z-index: 2;
@@ -298,24 +297,6 @@
   line-height: 1;
   text-transform: uppercase;
   transition: color var(--theme-transition);
-}
-
-.cardStatus {
-  top: 14px;
-  left: 14px;
-  border: 1px solid rgb(var(--theme-text-rgb) / 0.18);
-  border-radius: 999px;
-  padding: 6px 8px;
-  background: rgb(var(--theme-background-rgb) / 0.32);
-  transition:
-    color var(--theme-transition),
-    background-color var(--theme-transition),
-    border-color var(--theme-transition);
-}
-
-.imageCard .cardStatus {
-  right: 14px;
-  left: auto;
 }
 
 .cardCategory {
@@ -985,7 +966,6 @@
   .carouselControls > button,
   .libraryDots span,
   .card,
-  .cardStatus,
   .cardCategory,
   .logo,
   .gameInfo,

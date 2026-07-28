@@ -25,7 +25,6 @@ export function GameCard({ project, isActive, onSelect }: GameCardProps) {
       {project.image ? (
         <img className={styles.cardImage} src={project.image} alt="" aria-hidden="true" />
       ) : null}
-      <span className={styles.cardStatus}>{project.status}</span>
       <span className={styles.cardCategory}>{project.category}</span>
       <span className={styles.logo}>{project.title}</span>
     </button>

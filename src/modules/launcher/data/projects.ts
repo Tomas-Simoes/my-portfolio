@@ -18,7 +18,6 @@ export type Project = {
   description: string;
   contribution: string;
   category: string;
-  status: string;
   stack: string[];
   year: string;
   timelineLabel: string;
@@ -49,7 +48,6 @@ export const projects: Project[] = [
     contribution:
       'Built the core gameplay systems, including inventory, enemies, camera management, NPC dialogue, ability progression, areas, and combat flow.',
     category: 'Game',
-    status: 'Discontinued',
     stack: ['Unity', 'C#', 'Game Architecture'],
     year: '2023',
     timelineLabel: 'Year',
@@ -103,7 +101,6 @@ export const projects: Project[] = [
     contribution:
       'Built a computer-vision measurement pipeline around image prediction, reference-point recognition, camera parameters, and geometric correction.',
     category: 'Computer Vision',
-    status: 'Published',
     stack: ['Python', 'Ultralytics', 'YOLO', 'Geometry'],
     year: '2025',
     timelineLabel: 'Paper',
@@ -139,6 +136,7 @@ export const projects: Project[] = [
       },
     ],
     cover: 'linear-gradient(135deg, #090b0d, #24282c 52%, #f7f8f2)',
+    image: '/images/acharya-cover.png',
     theme: {
       accent: '#f7f8f2',
       accentStrong: '#ffffff',
@@ -161,7 +159,6 @@ export const projects: Project[] = [
     contribution:
       'Built the student-facing experience around course information, event attendance, points, rewards, and backend-backed member flows.',
     category: 'App',
-    status: 'Backend down',
     stack: ['Expo', 'React Native', 'Backend API'],
     year: 'UBI',
     timelineLabel: 'Context',
@@ -215,7 +212,6 @@ export const projects: Project[] = [
     contribution:
       'Built the scheduling testbed with QUBO construction, PennyLane QAOA solving, brute-force validation, iterative sub-QUBO decomposition, and visual diagnostics.',
     category: 'Research',
-    status: 'Prototype',
     stack: ['Python', 'PennyLane', 'QAOA', 'QUBO'],
     year: '2026',
     timelineLabel: 'Year',

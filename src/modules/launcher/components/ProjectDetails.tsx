@@ -73,10 +73,6 @@ export function ProjectDetails({
                 <dt>Role</dt>
                 <dd>{project.role}</dd>
               </div>
-              <div>
-                <dt>Status</dt>
-                <dd>{project.status}</dd>
-              </div>
             </dl>
           </div>
 
