@@ -1,10 +1,10 @@
 import styles from './App.module.css';
-import { GameLauncher } from './modules/launcher/GameLauncher';
+import { BootScene } from './modules/boot/BootScene';
 
 export default function App() {
   return (
     <main className={styles.app}>
-      <GameLauncher />
+      <BootScene />
     </main>
   );
 }

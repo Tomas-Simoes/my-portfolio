@@ -5,14 +5,12 @@ type ProjectDetailsProps = {
   project: Project;
   activeIndex: number;
   totalProjects: number;
-  onMove: (step: number) => void;
 };
 
 export function ProjectDetails({
   project,
   activeIndex,
   totalProjects,
-  onMove,
 }: ProjectDetailsProps) {
   const count = String(activeIndex + 1).padStart(2, '0');
   const total = String(totalProjects).padStart(2, '0');
@@ -34,20 +32,24 @@ export function ProjectDetails({
 
           <p className={styles.stack}>{project.stack.join(' · ')}</p>
 
-          <div className={styles.actions}>
-            {project.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={
-                  link.variant === 'primary' ? styles.primaryAction : styles.textAction
-                }
-                target="_blank"
-                rel="noreferrer"
-              >
-                {link.label}
-              </a>
-            ))}
+          <div className={styles.launchDock}>
+            <span className={styles.launchPrompt}>{project.launchPrompt}</span>
+            <div className={styles.actions}>
+              {project.links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className={
+                    link.variant === 'primary' ? styles.primaryAction : styles.textAction
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+            <span className={styles.buildMeta}>{project.buildMeta}</span>
           </div>
         </div>
 
@@ -95,17 +97,6 @@ export function ProjectDetails({
             </div>
           </section>
         </div>
-      </div>
-
-      <div className={styles.controls}>
-        <button onClick={() => onMove(-1)} aria-label="Previous project">
-          ←
-        </button>
-        <button onClick={() => onMove(1)} aria-label="Next project">
-          →
-        </button>
-        <span>Browse</span>
-        <span>Enter Open</span>
       </div>
     </footer>
   );

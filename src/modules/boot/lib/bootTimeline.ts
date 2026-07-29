@@ -1,0 +1,2 @@
+export const BOOT_TRANSITION_DURATION = 8;
+export const BOOT_ROTATION_START_TIME = 5.5;

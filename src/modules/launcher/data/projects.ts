@@ -23,6 +23,8 @@ export type Project = {
   timelineLabel: string;
   role: string;
   previewLabel: string;
+  launchPrompt: string;
+  buildMeta: string;
   achievements: {
     title: string;
     detail: string;
@@ -53,6 +55,8 @@ export const projects: Project[] = [
     timelineLabel: 'Year',
     role: 'Game Developer',
     previewLabel: 'Boss arena',
+    launchPrompt: 'READY TO INSTALL',
+    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     achievements: [
       {
         title: 'Boss Fight',
@@ -72,7 +76,7 @@ export const projects: Project[] = [
     ],
     links: [
       {
-        label: 'Open project',
+        label: '▶ INSTALL',
         href: 'https://github.com/Tomas-Simoes/Aspect-of-Light',
         variant: 'primary',
       },
@@ -106,6 +110,8 @@ export const projects: Project[] = [
     timelineLabel: 'Paper',
     role: 'ML Developer',
     previewLabel: 'Measurement pipeline',
+    launchPrompt: 'READY TO VIEW',
+    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     achievements: [
       {
         title: 'Reference Markers',
@@ -125,7 +131,7 @@ export const projects: Project[] = [
     ],
     links: [
       {
-        label: 'View prototype',
+        label: '▶ VIEW PROJECT',
         href: 'https://github.com/Tomas-Simoes/Acharya-Measure-Prototype',
         variant: 'primary',
       },
@@ -164,6 +170,8 @@ export const projects: Project[] = [
     timelineLabel: 'Context',
     role: 'App Developer',
     previewLabel: 'Member portal',
+    launchPrompt: 'READY TO LAUNCH',
+    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     achievements: [
       {
         title: 'Course Hub',
@@ -183,7 +191,7 @@ export const projects: Project[] = [
     ],
     links: [
       {
-        label: 'Launch app',
+        label: '▶ OPEN PROJECT',
         href: 'https://app.ninf.org/home',
         variant: 'primary',
       },
@@ -217,6 +225,8 @@ export const projects: Project[] = [
     timelineLabel: 'Year',
     role: 'Research Developer',
     previewLabel: 'Scheduling chamber',
+    launchPrompt: 'READY TO LAUNCH',
+    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     achievements: [
       {
         title: 'QUBO Forge',
@@ -236,7 +246,7 @@ export const projects: Project[] = [
     ],
     links: [
       {
-        label: 'Open testbed',
+        label: '▶ OPEN PROJECT',
         href: 'https://github.com/Tomas-Simoes/Hybrid-Quantum-Classical-Testbed-For-Operating-System-Scheduling',
         variant: 'primary',
       },
