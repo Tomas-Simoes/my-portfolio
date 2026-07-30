@@ -7,7 +7,6 @@ type ONSceneProps = {
 export function ONScene({ onPowerOn }: ONSceneProps) {
   return (
     <section className={styles.scene} aria-label="Power screen">
-      <div className={styles.screen} aria-hidden="true" />
       <button
         className={styles.powerButton}
         type="button"

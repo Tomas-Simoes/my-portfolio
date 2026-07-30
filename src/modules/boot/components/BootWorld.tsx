@@ -29,9 +29,10 @@ export function BootWorld() {
       <pointLight color="#2e78ff" distance={30} intensity={3.35} position={[5.8, 3.2, -6.4]} />
       <pointLight color="#b251ff" distance={20} intensity={1.55} position={[4.2, 5.2, 5.8]} />
       <pointLight color="#00e0ff" distance={18} intensity={1.5} position={[-4.5, 4.6, -5.2]} />
+
       <MemoryFog />
       <MemoryBlocks blocks={memoryBlocks} />
-      <SignalBeacons />
+      {/*<SignalBeacons />*/}
       <BootCameraRig />
       <BootPostEffects />
     </>

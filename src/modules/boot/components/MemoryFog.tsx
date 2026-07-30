@@ -4,7 +4,7 @@ import type { Texture } from "three";
 
 type Vector3 = [number, number, number];
 
-type FogPatch = {
+type FogComponent = {
   id: string;
   position: Vector3;
   scale: Vector3;
@@ -14,7 +14,7 @@ type FogPatch = {
   blendMode?: "glow" | "shadow";
 };
 
-const FOG_PATCHES: FogPatch[] = [
+const FOG_COMPONENTS: FogComponent[] = [
   {
     id: "ember-left",
     position: [-5.5, 7.2, 5.2],
@@ -182,15 +182,15 @@ export function MemoryFog() {
 
   return (
     <group>
-      {FOG_PATCHES.map((patch) => (
-        <sprite key={patch.id} position={patch.position} scale={patch.scale}>
+      {FOG_COMPONENTS.map((component) => (
+        <sprite key={component.id} position={component.position} scale={component.scale}>
           <spriteMaterial
             map={texture}
-            color={patch.color}
+            color={component.color}
             transparent
-            opacity={patch.opacity}
-            blending={patch.blendMode === "shadow" ? NormalBlending : AdditiveBlending}
-            rotation={patch.rotation}
+            opacity={component.opacity}
+            blending={component.blendMode === "shadow" ? NormalBlending : AdditiveBlending}
+            rotation={component.rotation}
             depthWrite={false}
             depthTest={false}
             toneMapped={false}

@@ -1,7 +1,7 @@
 import { useTexture } from "@react-three/drei";
-import { useEffect, useMemo } from "react";
-import { DoubleSide, RepeatWrapping } from "three";
-import type { Texture } from "three";
+import { useCallback, useEffect, useMemo } from "react";
+import { Color, DoubleSide, RepeatWrapping } from "three";
+import type { MeshStandardMaterial, Texture } from "three";
 
 type Vector3 = [number, number, number];
 type FaceSize = [number, number];
@@ -20,6 +20,9 @@ const BLOCK_COUNT = 20;
 const BLOCK_SEPARATION_GAP = 0.6;
 const CENTER_CLEARANCE_RADIUS = 3.2;
 const POSITION_ATTEMPTS = 80;
+const BLOCK_BASE_FOG_COLOR = new Color("#07030a");
+const BLOCK_BASE_FOG_BOTTOM_Y = 2.2;
+const BLOCK_BASE_FOG_TOP_Y = 8.6;
 
 function getBlockFootprintRadius(scale: Vector3) {
   return Math.hypot(scale[0] / 2, scale[2] / 2);
@@ -162,6 +165,68 @@ type BlockFaceProps = {
   tint: string;
 };
 
+type BlockFaceMaterialProps = {
+  texture: Texture;
+  tint: string;
+};
+
+function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
+  const applyBaseFog = useCallback((shader: Parameters<MeshStandardMaterial["onBeforeCompile"]>[0]) => {
+    shader.uniforms.uBlockBaseFogColor = { value: BLOCK_BASE_FOG_COLOR };
+    shader.uniforms.uBlockBaseFogBottomY = { value: BLOCK_BASE_FOG_BOTTOM_Y };
+    shader.uniforms.uBlockBaseFogTopY = { value: BLOCK_BASE_FOG_TOP_Y };
+
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        "#include <common>",
+        [
+          "#include <common>",
+          "varying float vBlockWorldY;",
+        ].join("\n"),
+      )
+      .replace(
+        "#include <worldpos_vertex>",
+        [
+          "#include <worldpos_vertex>",
+          "vBlockWorldY = (modelMatrix * vec4(transformed, 1.0)).y;",
+        ].join("\n"),
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        [
+          "#include <common>",
+          "uniform vec3 uBlockBaseFogColor;",
+          "uniform float uBlockBaseFogBottomY;",
+          "uniform float uBlockBaseFogTopY;",
+          "varying float vBlockWorldY;",
+        ].join("\n"),
+      )
+      .replace(
+        "#include <fog_fragment>",
+        [
+          "#include <fog_fragment>",
+          "float blockBaseFog = 1.0 - smoothstep(uBlockBaseFogBottomY, uBlockBaseFogTopY, vBlockWorldY);",
+          "gl_FragColor.rgb = mix(gl_FragColor.rgb, uBlockBaseFogColor, blockBaseFog);",
+        ].join("\n"),
+      );
+  }, []);
+
+  return (
+    <meshStandardMaterial
+      map={texture}
+      color={tint}
+      emissive="#06050d"
+      emissiveIntensity={0.012}
+      metalness={0.02}
+      roughness={0.68}
+      side={DoubleSide}
+      onBeforeCompile={applyBaseFog}
+    />
+  );
+}
+
 function BlockFace({ position, rotation, size, texture, tint }: BlockFaceProps) {
   const faceTexture = useMemo(() => {
     const nextTexture = texture.clone();
@@ -185,15 +250,7 @@ function BlockFace({ position, rotation, size, texture, tint }: BlockFaceProps) 
   return (
     <mesh castShadow receiveShadow position={position} rotation={rotation}>
       <planeGeometry args={size} />
-      <meshStandardMaterial
-        map={faceTexture}
-        color={tint}
-        emissive="#06050d"
-        emissiveIntensity={0.012}
-        metalness={0.02}
-        roughness={0.68}
-        side={DoubleSide}
-      />
+      <BlockFaceMaterial texture={faceTexture} tint={tint} />
     </mesh>
   );
 }

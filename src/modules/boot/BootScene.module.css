@@ -1,0 +1,56 @@
+.stage {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+  background: #020206;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+.powerLayer {
+  z-index: 2;
+}
+
+.bootLayer {
+  z-index: 1;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.visibleBootLayer {
+  animation: bootFadeIn 600ms ease forwards;
+}
+
+.leavingPowerLayer {
+  pointer-events: none;
+  animation: powerFadeOut 600ms ease forwards;
+}
+
+@keyframes bootFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes powerFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}

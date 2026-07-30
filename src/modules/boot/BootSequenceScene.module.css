@@ -44,6 +44,8 @@
     -12px 0 18px rgba(39, 112, 255, 0.42),
     12px 0 20px rgba(255, 107, 31, 0.34),
     0 5px 18px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  animation: titleReveal 4.2s ease 2s forwards;
 }
 
 .fadeCurtain {
@@ -64,6 +66,21 @@
 
   to {
     opacity: 1;
+  }
+}
+
+@keyframes titleReveal {
+  0% {
+    opacity: 0;
+  }
+
+  24%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
