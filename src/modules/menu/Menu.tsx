@@ -17,7 +17,7 @@ const PROFILE_LINKS = {
 } as const;
 
 const PROFILE_IMAGE = {
-  src: '',
+  src: '/images/me.jpeg',
   alt: 'Tomás Simões',
 } as const;
 
@@ -198,40 +198,31 @@ function createPortfolioSections(): MenuSection[] {
       icon: 'skills',
       entries: [
         {
-          id: 'skills-gameplay',
-          label: 'Gameplay',
-          eyebrow: 'Game Systems',
-          title: 'Unity architecture and player-facing systems',
+          id: 'skills-web',
+          label: 'Web',
+          eyebrow: 'Web Development',
+          title: 'Full-stack Developer',
           body:
-            'Inventory, enemies, cameras, NPC dialogue, ability progression, areas, and combat flow for a playable action prototype.',
-          meta: ['Unity', 'C#', 'Game Architecture'],
+            'Experience building interfaces, backend services, and persistent web systems using relational and non-relational databases.',
+          meta: ['ReactJS', 'NestJS & Ruby', 'MySQL & MongoDB'],
         },
         {
-          id: 'skills-ml',
-          label: 'Vision',
-          eyebrow: 'Machine Learning',
-          title: 'Image prediction and geometric measurement',
+          id: 'skills-software',
+          label: 'Software',
+          eyebrow: 'Software Development',
+          title: 'Object-oriented systems',
           body:
-            'Computer-vision pipeline work around reference markers, camera parameters, geometric correction, and distance estimates.',
-          meta: ['Python', 'Ultralytics', 'YOLO / Geometry'],
+            'Comfortable structuring applications with object-oriented programming and Python',
+          meta: ['C#/Java', 'Python', 'OCaml'],
         },
         {
-          id: 'skills-mobile',
-          label: 'Mobile',
-          eyebrow: 'App Development',
-          title: 'React Native app experiences',
+          id: 'skills-quantum',
+          label: 'Quantum',
+          eyebrow: 'Quantum Computing',
+          title: 'Aspiring Quantum Computing Engineer',
           body:
-            'Student-facing product surfaces with information hubs, event attendance, points, rewards, and backend-powered member flows.',
-          meta: ['Expo', 'React Native', 'Backend API'],
-        },
-        {
-          id: 'skills-research',
-          label: 'Research',
-          eyebrow: 'Optimization',
-          title: 'Quantum-classical scheduling experiments',
-          body:
-            'QUBO model construction, PennyLane QAOA solving, brute-force validation, iterative sub-QUBO decomposition, and diagnostics.',
-          meta: ['Python', 'PennyLane', 'QAOA / QUBO'],
+            'Interested in pursuing a career in quantum computing by combining my software engineering background with quantum algorithms.',
+          meta: ['QUBO / QAOA', 'PennyLane', 'Research'],
         },
       ],
     },
@@ -432,6 +423,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
   const activeEntry = activeSection.entries[activeEntryIndex];
   const activeActions = activeEntry.actions ?? (activeEntry.action ? [activeEntry.action] : []);
   const isProfileSection = activeSection.id === 'profile';
+  const isStackSection = activeSection.id === 'skills';
   const activeImage = isProfileSection ? activeEntry.image : undefined;
 
   useEffect(() => {
@@ -548,6 +540,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
     <section
       ref={menuRef}
       className={styles.menu}
+      data-active-section={activeSection.id}
       aria-label="Portfolio console menu"
       tabIndex={0}
       onKeyDown={handleKeyDown}
@@ -647,7 +640,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
           ))}
         </nav>
 
-        {!isProfileSection ? (
+        {!isProfileSection && !isStackSection ? (
           <div className={styles.submenuShell}>
             <div className={styles.submenuGlow} aria-hidden="true" />
             <ul className={styles.submenu} aria-label={`${activeSection.label} entries`}>
@@ -670,51 +663,86 @@ export function Menu({ onOpenProjects }: MenuProps) {
         ) : null}
       </div>
 
-      <article
-        className={`${styles.detailPanel} ${isProfileSection ? styles.profileDetailPanel : ''}`}
-        aria-live="polite"
-      >
-        <div className={styles.detailContent}>
-          <p className={styles.eyebrow}>{activeEntry.eyebrow}</p>
-          <h1>{activeEntry.title}</h1>
-          <p className={styles.bodyCopy}>{activeEntry.body}</p>
-          <dl className={styles.metaList}>
-            {activeEntry.meta.map((metaItem, index) => (
-              <div key={`${activeEntry.id}-${metaItem}`}>
-                <dt>{String(index + 1).padStart(2, '0')}</dt>
-                <dd>{metaItem}</dd>
-              </div>
+      {isStackSection ? (
+        <article className={styles.stackPanel} aria-labelledby="stack-heading">
+          <div className={styles.stackHeader}>
+            <p className={styles.eyebrow}>Tools & Frameworks</p>
+            <h1 id="stack-heading">Technical Stack</h1>
+            <p className={styles.bodyCopy}>
+              A mix of modern web technologies, core software engineering principles, and tools for exploring quantum computing.
+            </p>
+          </div>
+
+          <div className={styles.stackFocusGrid} aria-label="Stack focal points">
+            {activeSection.entries.map((entry, entryIndex) => (
+              <button
+                key={entry.id}
+                className={`${styles.focusCard} ${entryIndex === activeEntryIndex ? styles.activeFocusCard : ''
+                  }`}
+                type="button"
+                aria-pressed={entryIndex === activeEntryIndex}
+                onClick={() => selectEntry(entryIndex)}
+              >
+                <span className={styles.focusNumber}>{String(entryIndex + 1).padStart(2, '0')}</span>
+                <span className={styles.focusEyebrow}>{entry.eyebrow}</span>
+                <strong>{entry.title}</strong>
+                <span className={styles.focusBody}>{entry.body}</span>
+                <span className={styles.stackPillList}>
+                  {entry.meta.map((metaItem) => (
+                    <span key={`${entry.id}-${metaItem}`}>{metaItem}</span>
+                  ))}
+                </span>
+              </button>
             ))}
-          </dl>
-          {activeActions.length > 0 ? (
-            <div className={styles.actionList} aria-label={`${activeEntry.label} links`}>
-              {activeActions.map((action) => (
-                <a
-                  key={`${activeEntry.id}-${action.label}`}
-                  className={`${styles.actionButton} ${action.icon ? styles.iconActionButton : ''}`}
-                  href={action.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={action.label}
-                  title={action.label}
-                >
-                  {action.icon ? <ActionIcon type={action.icon} /> : action.label}
-                </a>
+          </div>
+        </article>
+      ) : (
+        <article
+          className={`${styles.detailPanel} ${isProfileSection ? styles.profileDetailPanel : ''}`}
+          aria-live="polite"
+        >
+          <div className={styles.detailContent}>
+            <p className={styles.eyebrow}>{activeEntry.eyebrow}</p>
+            <h1>{activeEntry.title}</h1>
+            <p className={styles.bodyCopy}>{activeEntry.body}</p>
+            <dl className={styles.metaList}>
+              {activeEntry.meta.map((metaItem, index) => (
+                <div key={`${activeEntry.id}-${metaItem}`}>
+                  <dt>{String(index + 1).padStart(2, '0')}</dt>
+                  <dd>{metaItem}</dd>
+                </div>
               ))}
+            </dl>
+            {activeActions.length > 0 ? (
+              <div className={styles.actionList} aria-label={`${activeEntry.label} links`}>
+                {activeActions.map((action) => (
+                  <a
+                    key={`${activeEntry.id}-${action.label}`}
+                    className={`${styles.actionButton} ${action.icon ? styles.iconActionButton : ''}`}
+                    href={action.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={action.label}
+                    title={action.label}
+                  >
+                    {action.icon ? <ActionIcon type={action.icon} /> : action.label}
+                  </a>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          {activeImage ? (
+            <div className={styles.profileImageSlot}>
+              {activeImage.src ? (
+                <img src={activeImage.src} alt={activeImage.alt} />
+              ) : (
+                <span aria-hidden="true">TS</span>
+              )}
             </div>
           ) : null}
-        </div>
-
-        {activeImage ? (
-          <div className={styles.profileImageSlot}>
-            {activeImage.src ? (
-              <img src={activeImage.src} alt={activeImage.alt} />
-            ) : (
-              <span aria-hidden="true">TS</span>
-            )}
-          </div>
-        ) : null}
-      </article>
+        </article>
+      )}
 
       <div className={styles.sectionCounter} aria-hidden="true">
         <span>{String(activeSectionIndex + 1).padStart(2, '0')}</span>

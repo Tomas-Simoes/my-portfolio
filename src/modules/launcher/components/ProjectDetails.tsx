@@ -141,14 +141,10 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                   onEnded={showNextMedia}
                 />
               ) : null}
-              <div className={styles.previewOverlay}>
-                <span>Trailer / images</span>
-                <strong>{project.previewLabel}</strong>
-              </div>
             </div>
             <div
               className={styles.mediaStrip}
-              aria-label={`${project.title} trailer and images`}
+              aria-label={`${project.title} media previews`}
             >
               {mediaStripItems.map((media, mediaIndex) => (
                 <button

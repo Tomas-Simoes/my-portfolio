@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { AdditiveBlending, CanvasTexture, Color, SRGBColorSpace } from 'three';
 import type { BufferAttribute, Group, InterleavedBufferAttribute, Mesh, PointLight } from 'three';
 import type { Line2, LineSegments2 } from 'three-stdlib';
+import { BOOT_SCENE_PALETTE } from '../lib/bootPalette';
 
 type TrailPoint = [number, number, number];
 type TrailColor = [number, number, number, number];
@@ -41,11 +42,12 @@ type MotionState = {
 const TRAIL_POINT_COUNT = 42;
 const TRAIL_RENDER_POINT_COUNT = 88;
 const TRAIL_SAMPLE_INTERVAL = 0.04;
+const { signalBeacons } = BOOT_SCENE_PALETTE;
 
 const SIGNAL_BEACONS: SignalBeacon[] = [
   {
     id: 'green',
-    color: '#39ff8f',
+    color: signalBeacons.green,
     height: 23.2,
     size: 0.043,
     glowSize: 0.42,
@@ -63,7 +65,7 @@ const SIGNAL_BEACONS: SignalBeacon[] = [
   },
   {
     id: 'white',
-    color: '#f7fbff',
+    color: signalBeacons.white,
     height: 23,
     size: 0.04,
     glowSize: 0.38,
@@ -81,7 +83,7 @@ const SIGNAL_BEACONS: SignalBeacon[] = [
   },
   {
     id: 'blue',
-    color: '#2f83ff',
+    color: signalBeacons.blue,
     height: 22.8,
     size: 0.042,
     glowSize: 0.44,
@@ -99,7 +101,7 @@ const SIGNAL_BEACONS: SignalBeacon[] = [
   },
   {
     id: 'gold',
-    color: '#ffd34d',
+    color: signalBeacons.gold,
     height: 23.1,
     size: 0.041,
     glowSize: 0.4,

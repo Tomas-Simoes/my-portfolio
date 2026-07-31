@@ -1,16 +1,26 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useMemo } from 'react';
-import { Vector2 } from 'three';
+import { Vector2, Vector3 } from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { BOOT_SCENE_PALETTE } from '../lib/bootPalette';
+
+const { postGrade } = BOOT_SCENE_PALETTE;
 
 const ATMOSPHERE_GRADE_SHADER = {
   uniforms: {
     tDiffuse: { value: null },
     time: { value: 0 },
+    warmGrade: { value: new Vector3(...postGrade.warmGrade) },
+    coolGrade: { value: new Vector3(...postGrade.coolGrade) },
+    gradeMix: { value: postGrade.gradeMix },
+    emberHazeColor: { value: new Vector3(...postGrade.emberHazeColor) },
+    emberHazeStrength: { value: postGrade.emberHazeStrength },
+    cobaltHazeColor: { value: new Vector3(...postGrade.cobaltHazeColor) },
+    cobaltHazeStrength: { value: postGrade.cobaltHazeStrength },
   },
   vertexShader: `
     varying vec2 vUv;
@@ -23,6 +33,13 @@ const ATMOSPHERE_GRADE_SHADER = {
   fragmentShader: `
     uniform sampler2D tDiffuse;
     uniform float time;
+    uniform vec3 warmGrade;
+    uniform vec3 coolGrade;
+    uniform float gradeMix;
+    uniform vec3 emberHazeColor;
+    uniform float emberHazeStrength;
+    uniform vec3 cobaltHazeColor;
+    uniform float cobaltHazeStrength;
     varying vec2 vUv;
 
     float random(vec2 point) {
@@ -40,14 +57,12 @@ const ATMOSPHERE_GRADE_SHADER = {
       color.b = texture2D(tDiffuse, uv - colorFringe).b;
 
       float coolSide = smoothstep(0.0, 1.0, uv.x * 0.72 + uv.y * 0.28);
-      vec3 warmGrade = vec3(1.18, 0.78, 0.48);
-      vec3 coolGrade = vec3(0.54, 0.82, 1.36);
-      color.rgb = mix(color.rgb, color.rgb * mix(warmGrade, coolGrade, coolSide), 0.18);
+      color.rgb = mix(color.rgb, color.rgb * mix(warmGrade, coolGrade, coolSide), gradeMix);
 
       float emberHaze = smoothstep(0.72, 0.08, length((uv - vec2(0.62, 0.56)) * vec2(1.8, 1.05)));
       float cobaltHaze = smoothstep(0.82, 0.1, length((uv - vec2(0.41, 0.46)) * vec2(1.25, 1.55)));
-      color.rgb += vec3(1.0, 0.24, 0.05) * emberHaze * 0.028;
-      color.rgb += vec3(0.06, 0.28, 1.0) * cobaltHaze * 0.022;
+      color.rgb += emberHazeColor * emberHaze * emberHazeStrength;
+      color.rgb += cobaltHazeColor * cobaltHaze * cobaltHazeStrength;
 
       float vignette = smoothstep(0.86, 0.22, edgeDistance);
       color.rgb *= mix(0.3, 1.03, vignette);

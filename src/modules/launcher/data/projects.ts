@@ -32,7 +32,6 @@ export type Project = {
   year: string;
   timelineLabel: string;
   role: string;
-  previewLabel: string;
   launchPrompt: string;
   buildMeta: string;
   links: {
@@ -76,7 +75,6 @@ export const projects: Project[] = [
     year: '2023',
     timelineLabel: 'Year',
     role: 'Game Developer',
-    previewLabel: 'Boss arena',
     launchPrompt: 'READY TO INSTALL',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     links: [
@@ -148,7 +146,6 @@ export const projects: Project[] = [
     year: '2025',
     timelineLabel: 'Paper',
     role: 'ML Developer',
-    previewLabel: 'Measurement pipeline',
     launchPrompt: 'READY TO VIEW',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     links: [
@@ -207,7 +204,6 @@ export const projects: Project[] = [
     year: 'UBI',
     timelineLabel: 'Context',
     role: 'App Developer',
-    previewLabel: 'Member portal',
     launchPrompt: 'READY TO LAUNCH',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     links: [
@@ -261,7 +257,6 @@ export const projects: Project[] = [
     year: '2026',
     timelineLabel: 'Year',
     role: 'Research Developer',
-    previewLabel: 'Scheduling chamber',
     launchPrompt: 'READY TO LAUNCH',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     links: [

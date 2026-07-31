@@ -802,32 +802,6 @@
   filter: saturate(0.95) contrast(1.04);
 }
 
-.previewOverlay {
-  display: grid;
-  gap: 6px;
-  position: absolute;
-  right: 18px;
-  bottom: 16px;
-  left: 18px;
-  z-index: 2;
-}
-
-.previewOverlay span {
-  z-index: 1;
-  color: rgb(var(--theme-text-rgb) / 0.7);
-  font-size: 0.7rem;
-  line-height: 1;
-  text-transform: uppercase;
-  transition: color var(--theme-transition);
-}
-
-.previewOverlay strong {
-  color: var(--text-main);
-  font-size: clamp(1.1rem, 1.8vw, 1.9rem);
-  line-height: 1;
-  transition: color var(--theme-transition);
-}
-
 .mediaStrip {
   display: grid;
   grid-auto-flow: column;
@@ -1187,12 +1161,6 @@
     max-height: 38vh;
   }
 
-  .previewOverlay {
-    right: 14px;
-    bottom: 14px;
-    left: 14px;
-  }
-
   .mediaStrip {
     height: clamp(36px, 3.6vw, 46px);
   }
@@ -1392,8 +1360,6 @@
   .previewWindow,
   .previewWindow::before,
   .previewImage,
-  .previewOverlay span,
-  .previewOverlay strong,
   .mediaThumb,
   .mediaThumb::before,
   .actions a,

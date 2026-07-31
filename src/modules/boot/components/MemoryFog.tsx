@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { AdditiveBlending, CanvasTexture, NormalBlending, SRGBColorSpace } from "three";
 import type { Texture } from "three";
+import { BOOT_SCENE_PALETTE } from "../lib/bootPalette";
 
 type Vector3 = [number, number, number];
 
@@ -14,52 +15,54 @@ type FogComponent = {
   blendMode?: "glow" | "shadow";
 };
 
+const { memoryFog } = BOOT_SCENE_PALETTE;
+
 const FOG_COMPONENTS: FogComponent[] = [
   {
     id: "ember-left",
     position: [-5.5, 7.2, 5.2],
     scale: [22, 8.4, 1],
-    color: "#ff6a1d",
-    opacity: 0.18,
+    color: memoryFog.emberLeft,
+    opacity: 0.25,
     rotation: -0.42,
   },
   {
     id: "cobalt-right",
     position: [5.8, 8.6, -4.6],
     scale: [20, 9.2, 1],
-    color: "#225cff",
-    opacity: 0.17,
+    color: memoryFog.cobaltRight,
+    opacity: 0.11,
     rotation: 0.36,
   },
   {
     id: "hot-center",
     position: [1.3, 6.5, 1.4],
     scale: [18, 8.8, 1],
-    color: "#ff3d12",
-    opacity: 0.08,
+    color: memoryFog.hotCenter,
+    opacity: 0.14,
     rotation: 0.12,
   },
   {
     id: "cyan-lift",
     position: [-4.8, 9.8, -5.6],
     scale: [16, 7.4, 1],
-    color: "#00d9ff",
-    opacity: 0.11,
+    color: memoryFog.cyanLift,
+    opacity: 0.06,
     rotation: -0.08,
   },
   {
     id: "violet-roof",
     position: [2.4, 10.4, 4.8],
     scale: [18, 9, 1],
-    color: "#7d35ff",
-    opacity: 0.09,
+    color: memoryFog.violetRoof,
+    opacity: 0.12,
     rotation: 0.7,
   },
   {
     id: "black-pocket",
     position: [0.4, 5.6, -0.2],
     scale: [27, 14.8, 1],
-    color: "#020007",
+    color: memoryFog.blackPocket,
     opacity: 0.3,
     rotation: -0.2,
     blendMode: "shadow",
@@ -68,7 +71,7 @@ const FOG_COMPONENTS: FogComponent[] = [
     id: "lower-shadow",
     position: [-1.6, 4.8, 5.8],
     scale: [20, 9.8, 1],
-    color: "#000000",
+    color: memoryFog.lowerShadow,
     opacity: 0.2,
     rotation: 0.38,
     blendMode: "shadow",

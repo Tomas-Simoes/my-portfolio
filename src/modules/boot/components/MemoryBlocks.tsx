@@ -2,6 +2,7 @@ import { useTexture } from "@react-three/drei";
 import { useCallback, useEffect, useMemo } from "react";
 import { Color, DoubleSide, RepeatWrapping } from "three";
 import type { MeshStandardMaterial, Texture } from "three";
+import { BOOT_SCENE_PALETTE } from "../lib/bootPalette";
 
 type Vector3 = [number, number, number];
 type FaceSize = [number, number];
@@ -20,7 +21,8 @@ const BLOCK_COUNT = 20;
 const BLOCK_SEPARATION_GAP = 0.6;
 const CENTER_CLEARANCE_RADIUS = 3.2;
 const POSITION_ATTEMPTS = 80;
-const BLOCK_BASE_FOG_COLOR = new Color("#07030a");
+const { memoryBlocks } = BOOT_SCENE_PALETTE;
+const BLOCK_BASE_FOG_COLOR = new Color(memoryBlocks.baseFog);
 const BLOCK_BASE_FOG_BOTTOM_Y = 2.2;
 const BLOCK_BASE_FOG_TOP_Y = 8.6;
 
@@ -217,7 +219,7 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
     <meshStandardMaterial
       map={texture}
       color={tint}
-      emissive="#06050d"
+      emissive={memoryBlocks.emissive}
       emissiveIntensity={0.012}
       metalness={0.02}
       roughness={0.68}
@@ -270,42 +272,42 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
         rotation={[-Math.PI / 2, 0, 0]}
         size={[width, depth]}
         texture={texture}
-        tint="#aeb7bd"
+        tint={memoryBlocks.top}
       />
       <BlockFace
         position={[0, -height / 2, 0]}
         rotation={[Math.PI / 2, 0, 0]}
         size={[width, depth]}
         texture={texture}
-        tint="#111018"
+        tint={memoryBlocks.bottom}
       />
       <BlockFace
         position={[0, 0, depth / 2]}
         rotation={[0, 0, 0]}
         size={[width, height]}
         texture={texture}
-        tint="#bd815e"
+        tint={memoryBlocks.front}
       />
       <BlockFace
         position={[0, 0, -depth / 2]}
         rotation={[0, Math.PI, 0]}
         size={[width, height]}
         texture={texture}
-        tint="#668fb7"
+        tint={memoryBlocks.back}
       />
       <BlockFace
         position={[width / 2, 0, 0]}
         rotation={[0, Math.PI / 2, 0]}
         size={[depth, height]}
         texture={texture}
-        tint="#75aebe"
+        tint={memoryBlocks.right}
       />
       <BlockFace
         position={[-width / 2, 0, 0]}
         rotation={[0, -Math.PI / 2, 0]}
         size={[depth, height]}
         texture={texture}
-        tint="#c07b58"
+        tint={memoryBlocks.left}
       />
     </group>
   );
