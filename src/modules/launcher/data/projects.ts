@@ -11,6 +11,11 @@ export type ProjectTheme = {
   textRgb: string;
 };
 
+export type ProjectMedia = {
+  src: string;
+  type: 'image' | 'video';
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -36,7 +41,8 @@ export type Project = {
     variant: 'primary' | 'secondary';
   }[];
   cover: string;
-  image?: string;
+  coverImage?: string;
+  previewMedia?: ProjectMedia[];
   theme: ProjectTheme;
 };
 
@@ -81,7 +87,25 @@ export const projects: Project[] = [
       },
     ],
     cover: 'linear-gradient(135deg, #050b08, #122a1d 48%, #7ee787)',
-    image: '/images/aspect-light-cover.png',
+    coverImage: '/images/projects/aspect-of-light/cover.png',
+    previewMedia: [
+      {
+        src: '/images/projects/aspect-of-light/00.mp4',
+        type: 'video',
+      },
+      {
+        src: '/images/projects/aspect-of-light/01.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/aspect-of-light/02.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/aspect-of-light/03.png',
+        type: 'image',
+      },
+    ],
     theme: {
       accent: '#7ee787',
       accentStrong: '#b7f58c',
@@ -140,7 +164,7 @@ export const projects: Project[] = [
       },
     ],
     cover: 'linear-gradient(135deg, #090b0d, #24282c 52%, #f7f8f2)',
-    image: '/images/acharya-cover.png',
+    coverImage: '/images/projects/acharya/cover.png',
     theme: {
       accent: '#f7f8f2',
       accentStrong: '#ffffff',
@@ -194,7 +218,7 @@ export const projects: Project[] = [
       },
     ],
     cover: 'linear-gradient(135deg, #06111c, #173150 52%, #b8ecff)',
-    image: '/images/ninf-cover.png',
+    coverImage: '/images/projects/ninf/cover.png',
     theme: {
       accent: '#b8ecff',
       accentStrong: '#eefbff',
@@ -248,7 +272,7 @@ export const projects: Project[] = [
       },
     ],
     cover: 'linear-gradient(135deg, #0d0905, #2a2111 50%, #d9ad57)',
-    image: '/images/the-chamber-cover.png',
+    coverImage: '/images/projects/chamber/cover.png',
     theme: {
       accent: '#d9ad57',
       accentStrong: '#f4d98b',

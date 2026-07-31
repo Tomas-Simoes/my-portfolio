@@ -15,15 +15,20 @@ type GameCardProps = {
 export function GameCard({ project, isActive, onSelect }: GameCardProps) {
   return (
     <button
-      className={`${styles.card} ${project.image ? styles.imageCard : ''} ${
+      className={`${styles.card} ${project.coverImage ? styles.imageCard : ''} ${
         isActive ? styles.activeCard : ''
       }`}
       onClick={onSelect}
       style={{ '--cover': project.cover } as CardStyle}
       aria-pressed={isActive}
     >
-      {project.image ? (
-        <img className={styles.cardImage} src={project.image} alt="" aria-hidden="true" />
+      {project.coverImage ? (
+        <img
+          className={styles.cardImage}
+          src={project.coverImage}
+          alt=""
+          aria-hidden="true"
+        />
       ) : null}
       <span className={styles.cardCategory}>{project.category}</span>
       <span className={styles.logo}>{project.title}</span>

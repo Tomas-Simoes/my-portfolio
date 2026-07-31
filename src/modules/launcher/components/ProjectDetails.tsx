@@ -1,11 +1,81 @@
-import type { Project } from '../data/projects';
+import { useEffect, useState } from 'react';
+import type { Project, ProjectMedia } from '../data/projects';
 import styles from '../GameLauncher.module.css';
+
+const IMAGE_PREVIEW_DURATION_MS = 3500;
 
 type ProjectDetailsProps = {
   project: Project;
 };
 
+function PreviewMedia({
+  className,
+  media,
+  onEnded,
+}: {
+  className: string;
+  media: ProjectMedia;
+  onEnded: () => void;
+}) {
+  if (media.type === 'video') {
+    return (
+      <video
+        key={media.src}
+        className={className}
+        src={media.src}
+        autoPlay
+        muted
+        playsInline
+        aria-hidden="true"
+        onEnded={onEnded}
+      />
+    );
+  }
+
+  return <img className={className} src={media.src} alt="" aria-hidden="true" />;
+}
+
+function MediaThumb({ media }: { media: ProjectMedia }) {
+  if (media.type === 'video') {
+    return <video src={media.src} muted playsInline preload="metadata" aria-hidden="true" />;
+  }
+
+  return <img src={media.src} alt="" aria-hidden="true" />;
+}
+
 export function ProjectDetails({ project }: ProjectDetailsProps) {
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+  const coverMedia = project.coverImage
+    ? ({ src: project.coverImage, type: 'image' } satisfies ProjectMedia)
+    : undefined;
+  const previewMedia = project.previewMedia ?? [];
+  const mediaStripItems = previewMedia.length > 0 ? previewMedia : coverMedia ? [coverMedia] : [];
+  const primaryPreview = mediaStripItems[activeMediaIndex] ?? mediaStripItems[0];
+
+  useEffect(() => {
+    setActiveMediaIndex(0);
+  }, [project.id]);
+
+  useEffect(() => {
+    if (!primaryPreview || primaryPreview.type !== 'image' || mediaStripItems.length < 2) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setActiveMediaIndex((currentIndex) => (currentIndex + 1) % mediaStripItems.length);
+    }, IMAGE_PREVIEW_DURATION_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [mediaStripItems.length, primaryPreview]);
+
+  function showNextMedia() {
+    if (mediaStripItems.length < 2) {
+      return;
+    }
+
+    setActiveMediaIndex((currentIndex) => (currentIndex + 1) % mediaStripItems.length);
+  }
+
   return (
     <footer className={styles.gameInfo} aria-live="polite">
       <div className={styles.projectBody}>
@@ -64,12 +134,11 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
         <div className={styles.sidePanel}>
           <aside className={styles.previewPanel} aria-label={`${project.title} media`}>
             <div className={styles.previewWindow}>
-              {project.image ? (
-                <img
+              {primaryPreview ? (
+                <PreviewMedia
                   className={styles.previewImage}
-                  src={project.image}
-                  alt=""
-                  aria-hidden="true"
+                  media={primaryPreview}
+                  onEnded={showNextMedia}
                 />
               ) : null}
               <div className={styles.previewOverlay}>
@@ -77,12 +146,28 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                 <strong>{project.previewLabel}</strong>
               </div>
             </div>
-            <div className={styles.mediaStrip} aria-hidden="true">
-              <span className={styles.activeMediaThumb}>
-                {project.image ? <img src={project.image} alt="" /> : null}
-              </span>
-              <span />
-              <span />
+            <div
+              className={styles.mediaStrip}
+              aria-label={`${project.title} trailer and images`}
+            >
+              {mediaStripItems.map((media, mediaIndex) => (
+                <button
+                  key={media.src}
+                  className={`${styles.mediaThumb} ${
+                    mediaIndex === activeMediaIndex ? styles.activeMediaThumb : ''
+                  }`}
+                  type="button"
+                  onClick={() => setActiveMediaIndex(mediaIndex)}
+                  aria-current={mediaIndex === activeMediaIndex ? 'true' : undefined}
+                  aria-label={`Show ${project.title} ${
+                    media.type === 'video'
+                      ? 'trailer'
+                      : `image ${String(mediaIndex).padStart(2, '0')}`
+                  }`}
+                >
+                  <MediaThumb media={media} />
+                </button>
+              ))}
             </div>
           </aside>
 
