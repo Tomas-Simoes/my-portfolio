@@ -3,32 +3,40 @@ import styles from '../GameLauncher.module.css';
 
 type ProjectDetailsProps = {
   project: Project;
-  activeIndex: number;
-  totalProjects: number;
 };
 
-export function ProjectDetails({
-  project,
-  activeIndex,
-  totalProjects,
-}: ProjectDetailsProps) {
-  const count = String(activeIndex + 1).padStart(2, '0');
-  const total = String(totalProjects).padStart(2, '0');
-
+export function ProjectDetails({ project }: ProjectDetailsProps) {
   return (
     <footer className={styles.gameInfo} aria-live="polite">
-      <div className={styles.projectHeader}>
-        <p className={styles.count}>
-          {count} / {total}
-        </p>
-        <p className={styles.kicker}>{project.detail}</p>
-      </div>
-
       <div className={styles.projectBody}>
         <div className={styles.copy}>
-          <h1>{project.title}</h1>
-          <p className={styles.description}>{project.description}</p>
-          <p className={styles.contribution}>{project.contribution}</p>
+          <p className={styles.kicker}>{project.detail}</p>
+          <p className={styles.summary}>{project.summary}</p>
+
+          <section
+            className={styles.builtPanel}
+            aria-labelledby={`${project.id}-built-heading`}
+          >
+            <p className={styles.sectionLabel} id={`${project.id}-built-heading`}>
+              What I built
+            </p>
+            <ul className={styles.buildList}>
+              {project.builtSections.map((section) => (
+                <li key={section.title}>
+                  <strong>{section.title}</strong>
+                  <span>{section.detail}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <details className={styles.developmentDetails}>
+            <summary>View development details</summary>
+            <div>
+              <p>{project.description}</p>
+              <p>{project.contribution}</p>
+            </div>
+          </details>
 
           <p className={styles.stack}>{project.stack.join(' · ')}</p>
 
@@ -54,14 +62,27 @@ export function ProjectDetails({
         </div>
 
         <div className={styles.sidePanel}>
-          <aside className={styles.previewPanel} aria-label={`${project.title} preview`}>
+          <aside className={styles.previewPanel} aria-label={`${project.title} media`}>
             <div className={styles.previewWindow}>
-              <span>{project.previewLabel}</span>
-              <div className={styles.previewLines}>
-                <i />
-                <i />
-                <i />
+              {project.image ? (
+                <img
+                  className={styles.previewImage}
+                  src={project.image}
+                  alt=""
+                  aria-hidden="true"
+                />
+              ) : null}
+              <div className={styles.previewOverlay}>
+                <span>Trailer / images</span>
+                <strong>{project.previewLabel}</strong>
               </div>
+            </div>
+            <div className={styles.mediaStrip} aria-hidden="true">
+              <span className={styles.activeMediaThumb}>
+                {project.image ? <img src={project.image} alt="" /> : null}
+              </span>
+              <span />
+              <span />
             </div>
           </aside>
 
@@ -77,25 +98,6 @@ export function ProjectDetails({
               </div>
             </dl>
           </div>
-
-          <section className={styles.achievements} aria-label={`${project.title} achievements`}>
-            <div className={styles.achievementsHeader}>
-              <p>Achievements</p>
-              <span>{project.achievements.length} unlocked</span>
-            </div>
-            <div className={styles.achievementList}>
-              {project.achievements.map((achievement) => (
-                <article className={styles.achievementBadge} key={achievement.title}>
-                  <span aria-hidden="true">{achievement.title.slice(0, 2).toUpperCase()}</span>
-                  <div>
-                    <strong>{achievement.title}</strong>
-                    <small>{achievement.detail}</small>
-                  </div>
-                  <em>{achievement.rarity}</em>
-                </article>
-              ))}
-            </div>
-          </section>
         </div>
       </div>
     </footer>

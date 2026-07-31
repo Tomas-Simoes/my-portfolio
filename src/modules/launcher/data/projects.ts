@@ -15,9 +15,14 @@ export type Project = {
   id: string;
   title: string;
   detail: string;
+  summary: string;
   description: string;
   contribution: string;
   category: string;
+  builtSections: {
+    title: string;
+    detail: string;
+  }[];
   stack: string[];
   year: string;
   timelineLabel: string;
@@ -25,11 +30,6 @@ export type Project = {
   previewLabel: string;
   launchPrompt: string;
   buildMeta: string;
-  achievements: {
-    title: string;
-    detail: string;
-    rarity: string;
-  }[];
   links: {
     label: string;
     href: string;
@@ -45,11 +45,27 @@ export const projects: Project[] = [
     id: 'aspect-of-light',
     title: 'Aspect of Light',
     detail: 'Souls-like prototype · Unity',
+    summary:
+      'A complete top-down souls-like vertical slice centred around exploration and a boss encounter.',
     description:
       'A top-down souls-like action game built in 2023, with a full game architecture behind one explorable build and a focused boss encounter.',
     contribution:
       'Built the core gameplay systems, including inventory, enemies, camera management, NPC dialogue, ability progression, areas, and combat flow.',
     category: 'Game',
+    builtSections: [
+      {
+        title: 'Combat & Enemies',
+        detail: 'Player combat, enemy behaviour and the complete boss encounter.',
+      },
+      {
+        title: 'Inventory & Progression',
+        detail: 'Equipment, items and an ability progression system.',
+      },
+      {
+        title: 'World Systems',
+        detail: 'NPC dialogue, camera management, areas and gameplay flow.',
+      },
+    ],
     stack: ['Unity', 'C#', 'Game Architecture'],
     year: '2023',
     timelineLabel: 'Year',
@@ -57,23 +73,6 @@ export const projects: Project[] = [
     previewLabel: 'Boss arena',
     launchPrompt: 'READY TO INSTALL',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
-    achievements: [
-      {
-        title: 'Boss Fight',
-        detail: 'One complete encounter',
-        rarity: 'Rare',
-      },
-      {
-        title: 'Inventory Core',
-        detail: 'Items and equipment',
-        rarity: 'Common',
-      },
-      {
-        title: 'Ability Tree',
-        detail: 'Progression path built',
-        rarity: 'Epic',
-      },
-    ],
     links: [
       {
         label: '▶ INSTALL',
@@ -100,11 +99,27 @@ export const projects: Project[] = [
     id: 'acharya-measurement',
     title: 'Acharya Measurement',
     detail: 'Indoor measurement · Machine learning',
+    summary:
+      'A computer-vision measurement prototype for estimating indoor wall and window dimensions from photos.',
     description:
       'A FamousGadget internship prototype for estimating indoor window and wall measurements from photos using machine learning and geometric calculations.',
     contribution:
       'Built a computer-vision measurement pipeline around image prediction, reference-point recognition, camera parameters, and geometric correction.',
     category: 'Computer Vision',
+    builtSections: [
+      {
+        title: 'Detection Pipeline',
+        detail: 'Photo prediction flow for reference points, windows and wall features.',
+      },
+      {
+        title: 'Geometric Measurement',
+        detail: 'Camera parameters, reference scaling and correction calculations.',
+      },
+      {
+        title: 'Research Output',
+        detail: 'Experiment flow and paper-ready measurement results.',
+      },
+    ],
     stack: ['Python', 'Ultralytics', 'YOLO', 'Geometry'],
     year: '2025',
     timelineLabel: 'Paper',
@@ -112,23 +127,6 @@ export const projects: Project[] = [
     previewLabel: 'Measurement pipeline',
     launchPrompt: 'READY TO VIEW',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
-    achievements: [
-      {
-        title: 'Reference Markers',
-        detail: 'Scene points detected',
-        rarity: 'Common',
-      },
-      {
-        title: 'Geometry Pass',
-        detail: 'Distance estimates',
-        rarity: 'Rare',
-      },
-      {
-        title: 'Paper Trail',
-        detail: 'Co-authored research',
-        rarity: 'Epic',
-      },
-    ],
     links: [
       {
         label: '▶ VIEW PROJECT',
@@ -160,11 +158,27 @@ export const projects: Project[] = [
     id: 'ninf-application',
     title: 'NINF Application',
     detail: 'Student association app · UBI',
+    summary:
+      'A student association app for course information, event engagement and member reward flows.',
     description:
       'An application for the NINF student association at UBI, designed as a course information hub and member point system for events and rewards.',
     contribution:
       'Built the student-facing experience around course information, event attendance, points, rewards, and backend-backed member flows.',
     category: 'App',
+    builtSections: [
+      {
+        title: 'Member Experience',
+        detail: 'Course hub, event attendance and points balance views.',
+      },
+      {
+        title: 'Rewards Loop',
+        detail: 'Points-to-prizes flow for association participation.',
+      },
+      {
+        title: 'App Architecture',
+        detail: 'Expo screens connected to backend-backed member data.',
+      },
+    ],
     stack: ['Expo', 'React Native', 'Backend API'],
     year: 'UBI',
     timelineLabel: 'Context',
@@ -172,23 +186,6 @@ export const projects: Project[] = [
     previewLabel: 'Member portal',
     launchPrompt: 'READY TO LAUNCH',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
-    achievements: [
-      {
-        title: 'Course Hub',
-        detail: 'Information pages',
-        rarity: 'Common',
-      },
-      {
-        title: 'Event Points',
-        detail: 'Attendance rewards',
-        rarity: 'Rare',
-      },
-      {
-        title: 'Reward Loop',
-        detail: 'Points for prizes',
-        rarity: 'Epic',
-      },
-    ],
     links: [
       {
         label: '▶ OPEN PROJECT',
@@ -215,11 +212,27 @@ export const projects: Project[] = [
     id: 'the-chamber',
     title: 'The Chamber',
     detail: 'QAOA scheduler · Research testbed',
+    summary:
+      'A research testbed for hybrid quantum-classical process scheduling with QUBO and QAOA.',
     description:
       'A website and research surface exposing a hybrid quantum-classical scheduling algorithm for process-to-core assignment using QUBO and QAOA.',
     contribution:
       'Built the scheduling testbed with QUBO construction, PennyLane QAOA solving, brute-force validation, iterative sub-QUBO decomposition, and visual diagnostics.',
     category: 'Research',
+    builtSections: [
+      {
+        title: 'Scheduling Model',
+        detail: 'Process-to-core assignment translated into QUBO formulations.',
+      },
+      {
+        title: 'Solver Workflow',
+        detail: 'PennyLane QAOA loop with brute-force validation for comparison.',
+      },
+      {
+        title: 'Visual Diagnostics',
+        detail: 'Iterative sub-QUBO decomposition and result inspection tools.',
+      },
+    ],
     stack: ['Python', 'PennyLane', 'QAOA', 'QUBO'],
     year: '2026',
     timelineLabel: 'Year',
@@ -227,23 +240,6 @@ export const projects: Project[] = [
     previewLabel: 'Scheduling chamber',
     launchPrompt: 'READY TO LAUNCH',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
-    achievements: [
-      {
-        title: 'QUBO Forge',
-        detail: 'Assignment model built',
-        rarity: 'Common',
-      },
-      {
-        title: 'QAOA Solver',
-        detail: 'Quantum loop wired',
-        rarity: 'Rare',
-      },
-      {
-        title: 'Oracle Check',
-        detail: 'Brute-force validation',
-        rarity: 'Epic',
-      },
-    ],
     links: [
       {
         label: '▶ OPEN PROJECT',

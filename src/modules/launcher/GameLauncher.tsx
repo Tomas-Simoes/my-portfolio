@@ -14,7 +14,11 @@ const MENU_NAV_VOLUME = 0.45;
 
 type StartupPhase = 'waiting' | 'starting' | 'ready';
 
-export function GameLauncher() {
+type GameLauncherProps = {
+  onBackToMenu?: () => void;
+};
+
+export function GameLauncher({ onBackToMenu }: GameLauncherProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [startupPhase, setStartupPhase] = useState<StartupPhase>('waiting');
   const navSoundRef = useRef<HTMLAudioElement | null>(null);
@@ -51,6 +55,22 @@ export function GameLauncher() {
       navSoundRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (!onBackToMenu) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        onBackToMenu?.();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onBackToMenu]);
 
   function playMenuNavSound() {
     const navSound = navSoundRef.current;
@@ -110,6 +130,11 @@ export function GameLauncher() {
       </div>
       <header className={styles.topbar}>
         <div className={styles.identity}>
+          {onBackToMenu ? (
+            <button className={styles.menuBackButton} type="button" onClick={onBackToMenu}>
+              ← Menu
+            </button>
+          ) : null}
           <strong>Tomás Simões</strong>
           <span>
             <i />
@@ -119,7 +144,7 @@ export function GameLauncher() {
         <nav className={styles.nav} aria-label="Portfolio navigation">
           <a href="#about">Library</a>
           <a href="#cv">Career</a>
-          <a href="#contact">Achievements</a>
+          <a href="#contact">Contact</a>
         </nav>
       </header>
 
@@ -129,11 +154,7 @@ export function GameLauncher() {
         onMove={handleCarousel}
         onSelect={handleSelect}
       />
-      <ProjectDetails
-        project={activeProject}
-        activeIndex={activeIndex}
-        totalProjects={projects.length}
-      />
+      <ProjectDetails project={activeProject} />
     </section>
   );
 }

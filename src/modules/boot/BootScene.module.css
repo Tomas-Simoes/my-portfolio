@@ -23,12 +23,8 @@
 }
 
 .visibleBootLayer {
-  animation: bootFadeIn 600ms ease forwards;
-}
-
-.leavingPowerLayer {
-  pointer-events: none;
-  animation: powerFadeOut 600ms ease forwards;
+  animation: bootFadeIn var(--boot-reveal-duration, 500ms) ease var(--boot-reveal-delay, 500ms)
+    both;
 }
 
 @keyframes bootFadeIn {
@@ -40,17 +36,5 @@
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes powerFadeOut {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(0.985);
   }
 }

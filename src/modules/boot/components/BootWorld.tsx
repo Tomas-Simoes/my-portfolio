@@ -12,6 +12,7 @@ export function BootWorld() {
     <>
       <color attach="background" args={['#040206']} />
       <fog attach="fog" args={['#07030a', 12, 44]} />
+
       <ambientLight color="#130d1f" intensity={0.045} />
       <hemisphereLight color="#26365f" groundColor="#160506" intensity={0.24} />
       <directionalLight color="#ffd0a1" intensity={0.98} position={[-7.5, 8.5, 5.8]} />

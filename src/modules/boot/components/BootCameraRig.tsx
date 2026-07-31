@@ -8,7 +8,7 @@ const ROTATION_START_HEIGHT = 26.2;
 const INITIAL_DESCENT_SPEED = 1.35;
 const ROTATION_DESCENT_SPEED = 2.05;
 const FINAL_DESCENT_SPEED = 1.4;
-const FINAL_LEFT_ROTATION = MathUtils.degToRad(90);
+const SUBTLE_SEQUENCE_ROTATION = MathUtils.degToRad(16);
 const CAMERA_BACKWARD_ROLL = Math.PI;
 
 function easeInOutCubic(progress: number) {
@@ -74,12 +74,8 @@ export function BootCameraRig() {
   useFrame(({ clock }) => {
     const elapsed = clock.elapsedTime;
     const cameraHeight = getCameraHeight(elapsed);
-    const rotationProgress = MathUtils.clamp(
-      (elapsed - BOOT_ROTATION_START_TIME) / (BOOT_TRANSITION_DURATION - BOOT_ROTATION_START_TIME),
-      0,
-      1,
-    );
-    const leftRotation = FINAL_LEFT_ROTATION * easeInOutCubic(rotationProgress);
+    const rotationProgress = MathUtils.clamp(elapsed / BOOT_TRANSITION_DURATION, 0, 1);
+    const leftRotation = SUBTLE_SEQUENCE_ROTATION * easeInOutCubic(rotationProgress);
 
     camera.position.set(0, cameraHeight, 0);
     camera.rotation.set(-Math.PI / 2, 0, CAMERA_BACKWARD_ROLL - leftRotation);

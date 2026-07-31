@@ -1,15 +1,24 @@
+import type { CSSProperties } from 'react';
 import { useEffect, useState } from 'react';
 import { GameLauncher } from '../launcher/GameLauncher';
+import { Menu } from '../menu/Menu';
 import styles from './BootScene.module.css';
 import { BootSequenceScene } from './BootSequenceScene';
 import { useSoundtrack } from './hook/useSoundtrack';
 import { BOOT_TRANSITION_DURATION } from './lib/bootTimeline';
 import { ONScene } from './ONScene';
 
-type BootPhase = 'off' | 'transitioning' | 'booting' | 'launcher';
+type BootPhase = 'off' | 'transitioning' | 'booting' | 'menu' | 'launcher';
 
-const POWER_TRANSITION_MS = 600;
+const BOOT_REVEAL_DELAY_MS = 500;
+const BOOT_REVEAL_DURATION_MS = 1000;
+const POWER_TRANSITION_MS = BOOT_REVEAL_DELAY_MS + BOOT_REVEAL_DURATION_MS;
 const LAUNCHER_DELAY_MS = Math.max(BOOT_TRANSITION_DURATION * 1000 - POWER_TRANSITION_MS, 0);
+
+const bootRevealStyle = {
+  '--boot-reveal-delay': `${BOOT_REVEAL_DELAY_MS}ms`,
+  '--boot-reveal-duration': `${BOOT_REVEAL_DURATION_MS}ms`,
+} as CSSProperties;
 
 export function BootScene() {
   const [phase, setPhase] = useState<BootPhase>('off');
@@ -34,7 +43,7 @@ export function BootScene() {
     if (phase !== 'booting') return;
 
     const timer = window.setTimeout(() => {
-      setPhase('launcher');
+      setPhase('menu');
     }, LAUNCHER_DELAY_MS);
 
     return () => window.clearTimeout(timer);
@@ -57,18 +66,17 @@ export function BootScene() {
           className={`${styles.layer} ${styles.bootLayer} ${
             phase === 'transitioning' ? styles.visibleBootLayer : ''
           }`}
+          style={phase === 'transitioning' ? bootRevealStyle : undefined}
         >
           <BootSequenceScene />
         </div>
-
-        {phase === 'transitioning' ? (
-          <div className={`${styles.layer} ${styles.powerLayer} ${styles.leavingPowerLayer}`}>
-            <ONScene onPowerOn={handlePowerOn} />
-          </div>
-        ) : null}
       </div>
     );
   }
 
-  return <GameLauncher />;
+  if (phase === 'launcher') {
+    return <GameLauncher onBackToMenu={() => setPhase('menu')} />;
+  }
+
+  return <Menu onOpenProjects={() => setPhase('launcher')} />;
 }

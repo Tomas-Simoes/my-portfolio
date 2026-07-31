@@ -102,14 +102,16 @@
 }
 
 .launcherStarting .identity strong,
+.launcherStarting .menuBackButton,
 .launcherStarting .identity > span,
 .launcherStarting .nav a,
 .launcherStarting .libraryBar > *,
 .launcherStarting .carouselControls > button,
-.launcherStarting .projectHeader > *,
-.launcherStarting .copy > h1,
-.launcherStarting .description,
-.launcherStarting .contribution,
+.launcherStarting .kicker,
+.launcherStarting .summary,
+.launcherStarting .builtPanel,
+.launcherStarting .buildList li,
+.launcherStarting .developmentDetails,
 .launcherStarting .stack,
 .launcherStarting .launchDock,
 .launcherStarting .sidePanel > * {
@@ -119,6 +121,10 @@
 
 .launcherStarting .identity strong {
   animation-delay: 120ms;
+}
+
+.launcherStarting .menuBackButton {
+  animation-delay: 100ms;
 }
 
 .launcherStarting .identity > span {
@@ -199,70 +205,57 @@
   animation: detailPanelEnter 820ms var(--startup-ease) 500ms both;
 }
 
-.launcherStarting .projectHeader > :first-child {
+.launcherStarting .kicker {
   animation-delay: 620ms;
 }
 
-.launcherStarting .projectHeader > :last-child {
-  animation-delay: 680ms;
+.launcherStarting .summary {
+  animation-delay: 700ms;
 }
 
-.launcherStarting .copy > h1 {
-  animation-delay: 740ms;
+.launcherStarting .builtPanel {
+  animation-delay: 780ms;
 }
 
-.launcherStarting .description {
-  animation-delay: 820ms;
+.launcherStarting .buildList li:nth-child(1) {
+  animation-delay: 840ms;
 }
 
-.launcherStarting .contribution {
+.launcherStarting .buildList li:nth-child(2) {
   animation-delay: 900ms;
 }
 
+.launcherStarting .buildList li:nth-child(3) {
+  animation-delay: 960ms;
+}
+
+.launcherStarting .developmentDetails {
+  animation-delay: 1020ms;
+}
+
 .launcherStarting .stack {
-  animation-delay: 980ms;
+  animation-delay: 1080ms;
 }
 
 .launcherStarting .launchDock {
-  animation-delay: 1060ms;
+  animation-delay: 1140ms;
 }
 
 .launcherStarting .sidePanel > :nth-child(1) {
-  animation-delay: 760ms;
+  animation-delay: 720ms;
 }
 
 .launcherStarting .sidePanel > :nth-child(2) {
-  animation-delay: 880ms;
-}
-
-.launcherStarting .sidePanel > :nth-child(3) {
-  animation-delay: 1000ms;
-}
-
-.launcherStarting .achievementBadge {
-  animation: badgeStartup 620ms var(--startup-ease) both;
-  will-change: opacity, clip-path, filter;
-}
-
-.launcherStarting .achievementBadge:nth-child(1) {
-  animation-delay: 1160ms;
-}
-
-.launcherStarting .achievementBadge:nth-child(2) {
-  animation-delay: 1240ms;
-}
-
-.launcherStarting .achievementBadge:nth-child(3) {
-  animation-delay: 1320ms;
+  animation-delay: 840ms;
 }
 
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1080px;
+  max-width: 1240px;
   width: 100%;
-  margin: 0 auto 28px;
+  margin: 0 auto 20px;
   color: var(--text-muted);
   font-size: 0.85rem;
   position: relative;
@@ -287,6 +280,35 @@
   gap: 16px;
   align-items: center;
   min-width: 0;
+}
+
+.menuBackButton {
+  min-height: 32px;
+  border: 1px solid rgb(var(--theme-accent-rgb) / 0.3);
+  border-radius: 4px;
+  padding: 0 10px;
+  color: rgb(var(--theme-text-rgb) / 0.72);
+  cursor: pointer;
+  background: rgb(var(--theme-surface-rgb) / 0.3);
+  font-size: 0.72rem;
+  line-height: 1;
+  text-transform: uppercase;
+  transition:
+    color var(--theme-transition),
+    background-color var(--theme-transition),
+    border-color var(--theme-transition);
+}
+
+.menuBackButton:hover,
+.menuBackButton:focus-visible {
+  border-color: rgb(var(--theme-accent-rgb) / 0.66);
+  color: var(--text-main);
+  background: rgb(var(--theme-accent-rgb) / 0.1);
+}
+
+.menuBackButton:focus-visible {
+  outline: 1px solid var(--orange-400);
+  outline-offset: 3px;
 }
 
 .identity > span {
@@ -324,9 +346,9 @@
 }
 
 .carouselShell {
-  max-width: 1080px;
+  max-width: 1240px;
   width: 100%;
-  margin: 0 auto 20px;
+  margin: 0 auto 18px;
   position: relative;
   z-index: 2;
 }
@@ -412,8 +434,8 @@
 }
 
 .card {
-  flex: 0 0 clamp(142px, 14vw, 176px);
-  height: clamp(80px, 7.875vw, 99px);
+  flex: 0 0 clamp(154px, 14vw, 196px);
+  height: clamp(87px, 7.875vw, 110px);
   border: 1px solid var(--line-soft);
   border-radius: 4px;
   color: var(--text-main);
@@ -456,8 +478,8 @@
 }
 
 .activeCard {
-  flex-basis: clamp(380px, 38vw, 500px);
-  height: clamp(214px, 21.375vw, 281px);
+  flex-basis: clamp(480px, 44vw, 660px);
+  height: clamp(270px, 24.75vw, 371px);
   border-color: rgb(var(--theme-accent-rgb) / 0.72);
   box-shadow: 0 0 0 1px rgb(var(--theme-accent-rgb) / 0.22);
 }
@@ -518,38 +540,25 @@
 }
 
 .activeCard .logo {
-  font-size: clamp(1.7rem, 3vw, 3.2rem);
+  font-size: clamp(2rem, 3.4vw, 3.65rem);
 }
 
 .gameInfo {
-  max-width: 1180px;
+  max-width: 1240px;
   width: 100%;
   min-height: 0;
   margin: 0 auto;
-  padding-top: 18px;
+  padding-top: 16px;
   border-top: 1px solid var(--line-soft);
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: block;
   transition: border-color var(--theme-transition);
-}
-
-.projectHeader {
-  margin-bottom: 16px;
-}
-
-.count {
-  margin: 0 0 8px;
-  color: var(--text-main);
-  font-size: 0.9rem;
-  letter-spacing: 0;
-  transition: color var(--theme-transition);
 }
 
 .copy {
   grid-column: 1;
-  max-width: 500px;
+  max-width: 520px;
 }
 
 .kicker {
@@ -563,9 +572,9 @@
 
 .projectBody {
   display: grid;
-  grid-template-columns: minmax(320px, 0.8fr) minmax(460px, 1.2fr);
-  gap: 18px clamp(38px, 5vw, 72px);
-  align-items: start;
+  grid-template-columns: minmax(300px, 0.72fr) minmax(520px, 1.28fr);
+  gap: 20px clamp(44px, 5vw, 76px);
+  align-items: stretch;
   min-width: 0;
   min-height: 0;
 }
@@ -574,32 +583,115 @@
   min-width: 0;
 }
 
-.gameInfo h1 {
-  margin: 0;
-  font-size: clamp(2rem, 3.3vw, 3.6rem);
-  line-height: 0.98;
-  letter-spacing: 0;
-  transition: color var(--theme-transition);
-}
-
-.description {
-  margin: 16px 0 0;
-  color: rgb(var(--theme-text-rgb) / 0.78);
-  font-size: clamp(0.92rem, 1vw, 1.02rem);
-  line-height: 1.48;
-  transition: color var(--theme-transition);
-}
-
-.contribution {
+.summary {
   margin: 12px 0 0;
   color: rgb(var(--theme-text-rgb) / 0.78);
   font-size: clamp(0.92rem, 1vw, 1.02rem);
-  line-height: 1.48;
+  font-style: italic;
+  line-height: 1.42;
   transition: color var(--theme-transition);
 }
 
+.builtPanel {
+  margin-top: 18px;
+}
+
+.sectionLabel {
+  margin: 0 0 10px;
+  color: var(--text-main);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: color var(--theme-transition);
+}
+
+.buildList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.buildList li {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding-left: 18px;
+  position: relative;
+}
+
+.buildList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.42rem;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgb(var(--theme-accent-rgb) / 0.74);
+  border-radius: 999px;
+  background: rgb(var(--theme-accent-rgb) / 0.18);
+  box-shadow: 0 0 16px rgb(var(--theme-accent-rgb) / 0.18);
+  transition:
+    background-color var(--theme-transition),
+    border-color var(--theme-transition),
+    box-shadow var(--theme-transition);
+}
+
+.buildList strong {
+  color: var(--text-main);
+  font-size: 0.92rem;
+  line-height: 1.2;
+  transition: color var(--theme-transition);
+}
+
+.buildList span {
+  color: rgb(var(--theme-text-rgb) / 0.7);
+  font-size: 0.84rem;
+  line-height: 1.38;
+  transition: color var(--theme-transition);
+}
+
+.developmentDetails {
+  margin-top: 16px;
+  border-top: 1px solid rgb(var(--theme-accent-rgb) / 0.16);
+  padding-top: 12px;
+  color: rgb(var(--theme-text-rgb) / 0.72);
+  transition:
+    color var(--theme-transition),
+    border-color var(--theme-transition);
+}
+
+.developmentDetails summary {
+  width: fit-content;
+  color: var(--orange-400);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: color var(--theme-transition);
+}
+
+.developmentDetails summary:hover {
+  color: var(--text-main);
+}
+
+.developmentDetails div {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.developmentDetails p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.42;
+}
+
 .stack {
-  margin: 18px 0 0;
+  margin: 14px 0 0;
   color: var(--text-main);
   font-size: 0.95rem;
   transition: color var(--theme-transition);
@@ -608,8 +700,8 @@
 .sidePanel {
   display: grid;
   grid-column: 2;
-  gap: 12px;
-  align-self: start;
+  gap: 14px;
+  align-self: stretch;
   min-width: 0;
 }
 
@@ -619,7 +711,7 @@
 
 .meta dl {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   margin: 0;
 }
@@ -647,119 +739,13 @@
   transition: color var(--theme-transition);
 }
 
-.achievements {
-  min-width: 0;
-}
-
-.achievementsHeader {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.achievementsHeader p,
-.achievementsHeader span {
-  margin: 0;
-  font-size: 0.76rem;
-  line-height: 1.35;
-  text-transform: uppercase;
-}
-
-.achievementsHeader p {
-  color: var(--text-main);
-  transition: color var(--theme-transition);
-}
-
-.achievementsHeader span {
-  color: var(--text-muted);
-  transition: color var(--theme-transition);
-}
-
-.achievementList {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.achievementBadge {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 9px;
-  min-width: 0;
-  min-height: 68px;
-  border: 1px solid rgb(var(--theme-text-rgb) / 0.1);
-  border-radius: 4px;
-  padding: 8px;
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(135deg, rgb(var(--theme-accent-rgb) / 0.12), transparent 58%),
-    rgb(var(--theme-surface-rgb) / 0.58);
-  transition:
-    background-color var(--theme-transition),
-    border-color var(--theme-transition);
-}
-
-.achievementBadge > span {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  border: 1px solid rgb(var(--theme-accent-rgb) / 0.44);
-  border-radius: 999px;
-  color: var(--orange-400);
-  font-size: 0.7rem;
-  font-weight: 800;
-  background: rgb(var(--theme-accent-rgb) / 0.08);
-  transition:
-    color var(--theme-transition),
-    background-color var(--theme-transition),
-    border-color var(--theme-transition);
-}
-
-.achievementBadge div {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-
-.achievementBadge strong,
-.achievementBadge small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.achievementBadge strong {
-  color: var(--text-main);
-  font-size: 0.82rem;
-  line-height: 1.2;
-  transition: color var(--theme-transition);
-}
-
-.achievementBadge small {
-  color: rgb(var(--theme-text-rgb) / 0.66);
-  font-size: 0.72rem;
-  line-height: 1.3;
-  transition: color var(--theme-transition);
-}
-
-.achievementBadge em {
-  grid-column: 2;
-  color: var(--text-muted);
-  font-size: 0.66rem;
-  font-style: normal;
-  text-transform: uppercase;
-  transition: color var(--theme-transition);
-}
-
 .previewPanel {
-  display: flex;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 10px;
   width: 100%;
   min-width: 0;
-  min-height: clamp(176px, 16vw, 230px);
+  min-height: clamp(300px, 28vw, 430px);
   border: 1px solid var(--line-soft);
   border-radius: 4px;
   padding: 12px;
@@ -772,10 +758,8 @@
 }
 
 .previewWindow {
-  display: grid;
-  flex: 1;
+  display: block;
   min-height: 0;
-  place-items: center;
   border: 1px solid rgb(var(--theme-accent-rgb) / 0.34);
   border-radius: 3px;
   position: relative;
@@ -793,35 +777,89 @@
 .previewWindow::before {
   content: "";
   position: absolute;
-  inset: 28px 48px auto;
-  height: 56px;
+  inset: 0;
+  z-index: 1;
+  height: auto;
   border-radius: 3px;
-  background: rgb(var(--theme-accent-rgb) / 0.18);
+  background:
+    linear-gradient(180deg, transparent 42%, rgb(var(--theme-background-rgb) / 0.76)),
+    linear-gradient(90deg, rgb(var(--theme-accent-rgb) / 0.2), transparent 44%);
   transition: background-color var(--theme-transition);
 }
 
-.previewWindow span {
+.previewImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.95) contrast(1.04);
+}
+
+.previewOverlay {
+  display: grid;
+  gap: 6px;
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  left: 18px;
+  z-index: 2;
+}
+
+.previewOverlay span {
   z-index: 1;
-  color: var(--text-main);
-  font-size: 0.78rem;
+  color: rgb(var(--theme-text-rgb) / 0.7);
+  font-size: 0.7rem;
+  line-height: 1;
   text-transform: uppercase;
-  transform: translateY(-8px);
   transition: color var(--theme-transition);
 }
 
-.previewLines {
-  display: grid;
-  gap: 7px;
-  width: 48%;
-  position: absolute;
-  right: 42px;
-  bottom: 34px;
+.previewOverlay strong {
+  color: var(--text-main);
+  font-size: clamp(1.1rem, 1.8vw, 1.9rem);
+  line-height: 1;
+  transition: color var(--theme-transition);
 }
 
-.previewLines i {
+.mediaStrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  height: clamp(44px, 5vw, 64px);
+  min-height: 0;
+}
+
+.mediaStrip span {
+  border: 1px solid rgb(var(--theme-text-rgb) / 0.1);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgb(var(--theme-accent-rgb) / 0.12), transparent 58%),
+    rgb(var(--theme-surface-rgb) / 0.8);
+  transition:
+    background-color var(--theme-transition),
+    border-color var(--theme-transition);
+}
+
+.mediaStrip span::before {
+  content: "";
+  position: absolute;
+  inset: auto 10px 10px;
   height: 2px;
-  background: rgb(var(--theme-text-rgb) / 0.22);
-  transition: background-color var(--theme-transition);
+  background: rgb(var(--theme-text-rgb) / 0.16);
+}
+
+.mediaStrip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mediaStrip .activeMediaThumb {
+  border-color: rgb(var(--theme-accent-rgb) / 0.58);
 }
 
 .launchDock {
@@ -1019,20 +1057,6 @@
   }
 }
 
-@keyframes badgeStartup {
-  from {
-    opacity: 0;
-    clip-path: inset(0 22% 0 0 round 4px);
-    filter: brightness(0.75);
-  }
-
-  to {
-    opacity: 1;
-    clip-path: inset(0 round 4px);
-    filter: none;
-  }
-}
-
 @keyframes lineStartup {
   from {
     opacity: 0;
@@ -1067,13 +1091,13 @@
   }
 
   .card {
-    flex-basis: clamp(136px, 13vw, 164px);
-    height: clamp(77px, 7.3125vw, 92px);
+    flex-basis: clamp(148px, 12.6vw, 184px);
+    height: clamp(83px, 7.0875vw, 104px);
   }
 
   .activeCard {
-    flex-basis: clamp(360px, 34vw, 440px);
-    height: clamp(203px, 19.125vw, 248px);
+    flex-basis: clamp(430px, 39vw, 560px);
+    height: clamp(242px, 21.9375vw, 315px);
   }
 
   .logo {
@@ -1083,41 +1107,44 @@
   }
 
   .activeCard .logo {
-    font-size: clamp(1.45rem, 2.4vw, 2.45rem);
+    font-size: clamp(1.7rem, 2.7vw, 2.9rem);
   }
 
   .gameInfo {
     padding-top: 14px;
   }
 
-  .projectHeader {
-    margin-bottom: 10px;
-  }
-
-  .count {
-    margin-bottom: 6px;
-  }
-
   .projectBody {
     gap: 14px clamp(30px, 4vw, 56px);
   }
 
-  .gameInfo h1 {
-    font-size: clamp(1.8rem, 2.8vw, 2.7rem);
-  }
-
-  .description,
-  .contribution {
-    font-size: 0.9rem;
-    line-height: 1.38;
-  }
-
-  .description {
-    margin-top: 10px;
-  }
-
-  .contribution {
+  .summary {
     margin-top: 8px;
+    font-size: 0.88rem;
+    line-height: 1.34;
+  }
+
+  .builtPanel {
+    margin-top: 12px;
+  }
+
+  .buildList {
+    gap: 8px;
+  }
+
+  .buildList strong {
+    font-size: 0.86rem;
+  }
+
+  .buildList span,
+  .developmentDetails p {
+    font-size: 0.8rem;
+    line-height: 1.34;
+  }
+
+  .developmentDetails {
+    margin-top: 10px;
+    padding-top: 10px;
   }
 
   .stack,
@@ -1134,47 +1161,22 @@
   }
 
   .previewPanel {
-    min-height: clamp(142px, 13vw, 170px);
+    min-height: clamp(230px, 21vw, 320px);
     padding: 10px;
   }
 
-  .previewWindow::before {
-    inset: 24px 42px auto;
-    height: 44px;
+  .previewOverlay {
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
   }
 
-  .previewLines {
-    right: 36px;
-    bottom: 26px;
+  .mediaStrip {
+    height: clamp(38px, 4vw, 52px);
   }
 
   .meta dl {
     gap: 12px;
-  }
-
-  .achievementList {
-    gap: 8px;
-  }
-
-  .achievementBadge {
-    grid-template-columns: 30px minmax(0, 1fr);
-    min-height: 58px;
-    padding: 7px;
-  }
-
-  .achievementBadge > span {
-    width: 30px;
-    height: 30px;
-    font-size: 0.66rem;
-  }
-
-  .achievementBadge strong {
-    font-size: 0.78rem;
-  }
-
-  .achievementBadge small,
-  .achievementBadge em {
-    font-size: 0.66rem;
   }
 }
 
@@ -1196,7 +1198,7 @@
   }
 
   .identity {
-    gap: 0;
+    gap: 12px;
   }
 
   .identity > span {
@@ -1212,30 +1214,47 @@
   }
 
   .carouselControls {
-    grid-template-columns: 24px minmax(0, 1fr) 24px;
-    gap: 8px;
+    display: block;
+    position: relative;
   }
 
   .carouselControls > button {
-    width: 24px;
-    height: 44px;
+    position: absolute;
+    top: calc(50% - 8px);
+    z-index: 3;
+    width: 34px;
+    height: 54px;
+    background: rgb(var(--theme-background-rgb) / 0.42);
+    transform: translateY(-50%);
+  }
+
+  .carouselControls > button:first-child {
+    left: 6px;
+  }
+
+  .carouselControls > button:last-child {
+    right: 6px;
   }
 
   .carousel {
-    justify-content: start;
-    gap: 12px;
+    justify-content: center;
+    gap: 0;
     padding-bottom: 16px;
   }
 
   .card {
-    flex-basis: 36vw;
-    height: 20.25vw;
+    display: none;
+    flex-basis: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 
   .activeCard {
-    order: -1;
-    flex-basis: 82vw;
-    height: 46.125vw;
+    display: block;
+    order: 0;
+    flex: 0 0 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 
   .gameInfo {
@@ -1257,36 +1276,58 @@
   }
 
   .previewPanel {
-    min-height: 240px;
+    min-height: 300px;
   }
 
   .meta {
     padding-top: 0;
   }
 
-  .achievements {
-    margin-top: 0;
+  .meta dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 620px) {
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+
+  .identity {
+    flex-wrap: wrap;
+  }
+
+  .menuBackButton {
+    min-height: 34px;
+    padding-inline: 12px;
+  }
+
+  .nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .nav a {
+    font-size: 0.76rem;
+  }
+
+  .previewPanel {
+    min-height: 250px;
+  }
+
+  .mediaStrip {
+    height: 42px;
   }
 
   .meta dl {
     grid-template-columns: 1fr;
   }
-
-  .achievementList {
-    grid-template-columns: 1fr;
-  }
-
-  .previewWindow::before {
-    inset: 28px 30px auto;
-    height: 48px;
-  }
-
-  .previewLines {
-    right: 30px;
-    bottom: 30px;
-    width: 54%;
-  }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1296,6 +1337,7 @@
   .topbar,
   .topbar strong,
   .topbar strong::after,
+  .menuBackButton,
   .identity > span,
   .nav a,
   .libraryBar,
@@ -1306,28 +1348,27 @@
   .cardCategory,
   .logo,
   .gameInfo,
-  .count,
   .kicker,
-  .gameInfo h1,
-  .description,
-  .contribution,
+  .summary,
+  .sectionLabel,
+  .buildList li::before,
+  .buildList strong,
+  .buildList span,
+  .developmentDetails,
+  .developmentDetails summary,
   .stack,
   .launchDock,
   .launchPrompt,
   .meta dt,
   .meta dd,
-  .achievementsHeader p,
-  .achievementsHeader span,
-  .achievementBadge,
-  .achievementBadge > span,
-  .achievementBadge strong,
-  .achievementBadge small,
-  .achievementBadge em,
   .previewPanel,
   .previewWindow,
   .previewWindow::before,
-  .previewWindow span,
-  .previewLines i,
+  .previewImage,
+  .previewOverlay span,
+  .previewOverlay strong,
+  .mediaStrip span,
+  .mediaStrip span::before,
   .actions a,
   .buildMeta {
     transition-duration: 1ms;
@@ -1346,14 +1387,14 @@
   .launcherStarting .card,
   .launcherStarting .libraryDots span,
   .launcherStarting .gameInfo,
-  .launcherStarting .projectHeader > *,
-  .launcherStarting .copy > h1,
-  .launcherStarting .description,
-  .launcherStarting .contribution,
+  .launcherStarting .kicker,
+  .launcherStarting .summary,
+  .launcherStarting .builtPanel,
+  .launcherStarting .buildList li,
+  .launcherStarting .developmentDetails,
   .launcherStarting .stack,
   .launcherStarting .launchDock,
-  .launcherStarting .sidePanel > *,
-  .launcherStarting .achievementBadge {
+  .launcherStarting .sidePanel > * {
     animation: none;
   }
 }
