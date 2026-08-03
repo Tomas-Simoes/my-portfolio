@@ -4,16 +4,24 @@ import styles from './Menu.module.css';
 
 const MENU_STARTUP_SOUND = '/music/menu-startup.mp3';
 const MENU_NAV_SOUND = '/music/menu-nav.mp3';
+const STARTUP_WAIT_MS = 120;
+const STARTUP_ANIMATION_MS = 1800;
 const MENU_STARTUP_VOLUME = 0.45;
 const MENU_NAV_VOLUME = 0.42;
 
-type MenuIcon = 'profile' | 'projects' | 'timeline' | 'skills' | 'trophy' | 'network';
-type MenuActionIcon = 'github' | 'linkedin' | 'cv' | 'external';
+type MenuIcon = 'profile' | 'projects' | 'timeline' | 'skills' | 'network';
+type MenuActionIcon = 'github' | 'linkedin' | 'email' | 'cv' | 'external';
+type StartupPhase = 'waiting' | 'starting' | 'ready';
 
 const PROFILE_LINKS = {
   github: 'https://github.com/Tomas-Simoes',
   linkedin: 'https://www.linkedin.com/in/tomas-simoes/',
   cv: '/cv/cv.pdf',
+} as const;
+
+const OBFUSCATED_EMAIL = {
+  href: 'mail&#116;&#111;&#58;to%6D&#97;s&#37;3&#50;0simoes&#64;gma&#37;&#54;&#57;%6C%&#50;E%63o&#109;',
+  label: 'to&#109;a&#115;&#50;0simo&#101;s&#64;&#103;m&#97;il&#46;com',
 } as const;
 
 const PROFILE_IMAGE = {
@@ -23,8 +31,11 @@ const PROFILE_IMAGE = {
 
 type MenuAction = {
   label: string;
-  href: string;
+  href?: string;
   icon?: MenuActionIcon;
+  displayLabel?: string;
+  obfuscatedHref?: string;
+  obfuscatedDisplayHtml?: string;
 };
 
 type MenuEntry = {
@@ -74,7 +85,7 @@ function createPortfolioSections(): MenuSection[] {
         {
           id: 'profile-main',
           label: 'Tomás Simões',
-          eyebrow: 'Developer Portfolio',
+          eyebrow: 'Portfolio',
           title: 'Software Developer',
           body:
             'Turning ideas into clear and useful digital experiences — from games and web applications to research-driven prototypes that explore new technologies and solve real-world problems.',
@@ -115,7 +126,7 @@ function createPortfolioSections(): MenuSection[] {
           id: 'timeline-2026',
           label: '2026',
           eyebrow: 'BACHELOR’S FINAL PROJECT',
-          title: 'Exploring Quantum Computing',
+          title: 'Exploring QC',
           body:
             'For the final project of my Bachelor’s degree, I developed The Chamber, combining software development and quantum computing to explore operating-system scheduling through hybrid quantum-classical methods.',
           meta: ['Python', 'QAOA / QUBO', 'Research'],
@@ -227,27 +238,6 @@ function createPortfolioSections(): MenuSection[] {
       ],
     },
     {
-      id: 'achievements',
-      label: 'Built',
-      icon: 'trophy',
-      entries: projects.flatMap((project) =>
-        project.builtSections.map((section) => ({
-          id: `${project.id}-${section.title}`,
-          label: section.title,
-          eyebrow: project.title,
-          title: section.title,
-          body: section.detail,
-          meta: [project.role, project.stack.slice(0, 2).join(' / '), project.year],
-          action: project.links[0]
-            ? {
-              label: 'Open Source',
-              href: project.links[0].href,
-            }
-            : undefined,
-        })),
-      ),
-    },
-    {
       id: 'contact',
       label: 'Network',
       icon: 'network',
@@ -255,27 +245,61 @@ function createPortfolioSections(): MenuSection[] {
         {
           id: 'contact-github',
           label: 'GitHub',
-          eyebrow: 'Code Archive',
-          title: 'Tomas-Simoes',
+          eyebrow: 'Code Repository',
+          title: 'GitHub',
           body:
-            'Primary public source for the portfolio repositories, project prototypes, and research experiments listed here.',
-          meta: ['Project repos', 'Source code', 'Portfolio archive'],
+            'Browse the projects and prototypes that I’ve built.',
+          meta: [],
           action: {
             label: 'Open GitHub',
-            href: 'https://github.com/Tomas-Simoes',
+            href: PROFILE_LINKS.github,
+            icon: 'github',
+            displayLabel: 'github.com/Tomas-Simoes',
           },
         },
         {
-          id: 'contact-ninf',
-          label: 'NINF App',
-          eyebrow: 'Live Surface',
-          title: 'app.ninf.org',
+          id: 'contact-linkedin',
+          label: 'LinkedIn',
+          eyebrow: 'Professional Page',
+          title: 'LinkedIn',
           body:
-            'A deployed student-association app experience connected to the NINF project entry.',
-          meta: ['Expo', 'React Native', 'Live app'],
+            'Connect with me and learn more about my professional journey!',
+          meta: [],
           action: {
-            label: 'Open App',
-            href: 'https://app.ninf.org/home',
+            label: 'Open LinkedIn',
+            href: PROFILE_LINKS.linkedin,
+            icon: 'linkedin',
+            displayLabel: 'linkedin.com/in/tomas-simoes',
+          },
+        },
+        {
+          id: 'contact-email',
+          label: 'Gmail',
+          eyebrow: 'Direct Contact',
+          title: 'Email',
+          body:
+            'Get in touch about opportunities, collaborations, projects, or any questions.',
+          meta: [],
+          action: {
+            label: 'Send email',
+            icon: 'email',
+            obfuscatedHref: OBFUSCATED_EMAIL.href,
+            obfuscatedDisplayHtml: OBFUSCATED_EMAIL.label,
+          },
+        },
+        {
+          id: 'contact-cv',
+          label: 'CV',
+          eyebrow: 'Curriculum Vitae',
+          title: 'CV',
+          body:
+            'An overview of my experience, education, skills, and projects.',
+          meta: [],
+          action: {
+            label: 'Open CV',
+            href: PROFILE_LINKS.cv,
+            icon: 'cv',
+            displayLabel: 'PDF / cv.pdf',
           },
         },
       ],
@@ -294,6 +318,25 @@ function formatMenuClock(date: Date) {
     hour: 'numeric',
     minute: '2-digit',
   }).format(date);
+}
+
+function decodeHtmlEntities(value: string) {
+  if (typeof document === 'undefined') {
+    return value;
+  }
+
+  const decoder = document.createElement('textarea');
+  decoder.innerHTML = value;
+
+  return decoder.value;
+}
+
+function resolveActionHref(action?: MenuAction) {
+  if (!action) {
+    return undefined;
+  }
+
+  return action.href ?? (action.obfuscatedHref ? decodeHtmlEntities(action.obfuscatedHref) : undefined);
 }
 
 function Icon({ type }: { type: MenuIcon }) {
@@ -332,16 +375,6 @@ function Icon({ type }: { type: MenuIcon }) {
           <path d="m15 11 9 13 9-13" />
         </svg>
       );
-    case 'trophy':
-      return (
-        <svg viewBox="0 0 48 48" aria-hidden="true">
-          <path d="M17 11h14v9c0 5-3 9-7 9s-7-4-7-9v-9Z" />
-          <path d="M17 15h-6v4c0 4 3 7 7 7" />
-          <path d="M31 15h6v4c0 4-3 7-7 7" />
-          <path d="M24 29v7" />
-          <path d="M17 39h14" />
-        </svg>
-      );
     case 'network':
       return (
         <svg viewBox="0 0 48 48" aria-hidden="true">
@@ -368,6 +401,23 @@ function ActionIcon({ type = 'external' }: { type?: MenuActionIcon }) {
           <path d="M6.94 8.98H3.85v10.3h3.09V8.98Z" />
           <path d="M5.4 4.02a1.79 1.79 0 1 0 0 3.58 1.79 1.79 0 0 0 0-3.58Z" />
           <path d="M20.15 13.63c0-3.1-1.65-4.54-3.86-4.54a3.34 3.34 0 0 0-3.03 1.67h-.04V8.98h-2.96v10.3h3.08v-5.1c0-1.35.26-2.65 1.93-2.65 1.64 0 1.66 1.54 1.66 2.74v5.01h3.08l.14-5.65Z" />
+        </svg>
+      );
+    case 'email':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M4 6.5h16v11H4v-11Z" />
+          <path d="m5 7.5 7 5 7-5" />
+          <path d="m5.4 17 4.8-4" />
+          <path d="m18.6 17-4.8-4" />
         </svg>
       );
     case 'cv':
@@ -415,6 +465,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
   const sections = useMemo(() => createPortfolioSections(), []);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [activeEntryIndex, setActiveEntryIndex] = useState(0);
+  const [startupPhase, setStartupPhase] = useState<StartupPhase>('waiting');
   const [clock, setClock] = useState(() => new Date());
   const navSoundRef = useRef<HTMLAudioElement | null>(null);
   const menuRef = useRef<HTMLElement | null>(null);
@@ -424,6 +475,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
   const activeActions = activeEntry.actions ?? (activeEntry.action ? [activeEntry.action] : []);
   const isProfileSection = activeSection.id === 'profile';
   const isStackSection = activeSection.id === 'skills';
+  const isNetworkSection = activeSection.id === 'contact';
   const activeImage = isProfileSection ? activeEntry.image : undefined;
 
   useEffect(() => {
@@ -438,12 +490,20 @@ export function Menu({ onOpenProjects }: MenuProps) {
 
     void startupSound.play().catch(() => undefined);
 
-    const readyTimer = window.setTimeout(() => {
+    const startTimer = window.setTimeout(() => {
+      setStartupPhase('starting');
+    }, STARTUP_WAIT_MS);
+    const finishTimer = window.setTimeout(() => {
+      setStartupPhase('ready');
+    }, STARTUP_WAIT_MS + STARTUP_ANIMATION_MS);
+    const focusTimer = window.setTimeout(() => {
       menuRef.current?.focus();
-    }, 420);
+    }, STARTUP_WAIT_MS + 520);
 
     return () => {
-      window.clearTimeout(readyTimer);
+      window.clearTimeout(startTimer);
+      window.clearTimeout(finishTimer);
+      window.clearTimeout(focusTimer);
       startupSound.pause();
       startupSound.currentTime = 0;
       navSound.pause();
@@ -502,12 +562,48 @@ export function Menu({ onOpenProjects }: MenuProps) {
     }
 
     const [firstAction] = activeActions;
+    const actionHref = resolveActionHref(firstAction);
 
-    if (!firstAction) {
+    if (!actionHref) {
       return;
     }
 
-    window.open(firstAction.href, '_blank', 'noopener,noreferrer');
+    if (actionHref.startsWith('mailto:')) {
+      window.location.href = actionHref;
+      return;
+    }
+
+    window.open(actionHref, '_blank', 'noopener,noreferrer');
+  }
+
+  function revealActionHref(event: { currentTarget: HTMLAnchorElement }, action?: MenuAction) {
+    const actionHref = resolveActionHref(action);
+
+    if (actionHref) {
+      event.currentTarget.href = actionHref;
+    }
+  }
+
+  function handleNetworkCardClick(
+    event: React.MouseEvent<HTMLAnchorElement>,
+    entryIndex: number,
+    action?: MenuAction,
+  ) {
+    selectEntry(entryIndex);
+
+    const actionHref = resolveActionHref(action);
+
+    if (!actionHref) {
+      event.preventDefault();
+      return;
+    }
+
+    event.currentTarget.href = actionHref;
+
+    if (actionHref.startsWith('mailto:')) {
+      event.preventDefault();
+      window.location.href = actionHref;
+    }
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLElement>) {
@@ -536,10 +632,18 @@ export function Menu({ onOpenProjects }: MenuProps) {
     }
   }
 
+  const menuClassName = [
+    styles.menu,
+    startupPhase === 'waiting' ? styles.menuWaiting : '',
+    startupPhase === 'starting' ? styles.menuStarting : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <section
       ref={menuRef}
-      className={styles.menu}
+      className={menuClassName}
       data-active-section={activeSection.id}
       aria-label="Portfolio console menu"
       tabIndex={0}
@@ -640,7 +744,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
           ))}
         </nav>
 
-        {!isProfileSection && !isStackSection ? (
+        {!isProfileSection && !isStackSection && !isNetworkSection ? (
           <div className={styles.submenuShell}>
             <div className={styles.submenuGlow} aria-hidden="true" />
             <ul className={styles.submenu} aria-label={`${activeSection.label} entries`}>
@@ -653,7 +757,9 @@ export function Menu({ onOpenProjects }: MenuProps) {
                     aria-pressed={entryIndex === activeEntryIndex}
                     onClick={() => selectEntry(entryIndex)}
                   >
-                    <span className={styles.entryGlyph}>{entry.label.slice(0, 2).toUpperCase()}</span>
+                    <span className={styles.entryGlyph} aria-hidden="true">
+                      {activeSection.id === 'timeline' ? '' : entry.label.slice(0, 2).toUpperCase()}
+                    </span>
                     <span>{entry.label}</span>
                   </button>
                 </li>
@@ -664,24 +770,24 @@ export function Menu({ onOpenProjects }: MenuProps) {
       </div>
 
       {isStackSection ? (
-        <article className={styles.stackPanel} aria-labelledby="stack-heading">
+        <article
+          key={activeSection.id}
+          className={`${styles.stackPanel} ${styles.contentEntering}`}
+          aria-labelledby="stack-heading"
+        >
           <div className={styles.stackHeader}>
             <p className={styles.eyebrow}>Tools & Frameworks</p>
             <h1 id="stack-heading">Technical Stack</h1>
             <p className={styles.bodyCopy}>
-              A mix of modern web technologies, core software engineering principles, and tools for exploring quantum computing.
+              Combines modern web technologies, solid software engineering foundations, and a growing focus on quantum computing.
             </p>
           </div>
 
           <div className={styles.stackFocusGrid} aria-label="Stack focal points">
             {activeSection.entries.map((entry, entryIndex) => (
-              <button
+              <div
                 key={entry.id}
-                className={`${styles.focusCard} ${entryIndex === activeEntryIndex ? styles.activeFocusCard : ''
-                  }`}
-                type="button"
-                aria-pressed={entryIndex === activeEntryIndex}
-                onClick={() => selectEntry(entryIndex)}
+                className={styles.focusCard}
               >
                 <span className={styles.focusNumber}>{String(entryIndex + 1).padStart(2, '0')}</span>
                 <span className={styles.focusEyebrow}>{entry.eyebrow}</span>
@@ -692,13 +798,68 @@ export function Menu({ onOpenProjects }: MenuProps) {
                     <span key={`${entry.id}-${metaItem}`}>{metaItem}</span>
                   ))}
                 </span>
-              </button>
+              </div>
             ))}
+          </div>
+        </article>
+      ) : isNetworkSection ? (
+        <article
+          key={activeSection.id}
+          className={`${styles.networkPanel} ${styles.contentEntering}`}
+          aria-labelledby="network-heading"
+        >
+          <div className={styles.networkIntro}>
+            <p className={styles.eyebrow}>Open Channels</p>
+            <h1 id="network-heading">Network</h1>
+            <p className={styles.bodyCopy}>
+              Code, career context, direct email, and CV. Email is the best public starting point; phone contact stays private until needed.
+            </p>
+          </div>
+
+          <div className={styles.networkMap} aria-label="Contact channels">
+            {activeSection.entries.map((entry, entryIndex) => {
+              const action = entry.action;
+              const initialHref = action?.href ?? `#${entry.id}`;
+              const isObfuscatedMail = Boolean(action?.obfuscatedHref);
+
+              return (
+                <a
+                  key={entry.id}
+                  className={styles.networkCard}
+                  href={initialHref}
+                  target={isObfuscatedMail ? undefined : '_blank'}
+                  rel={isObfuscatedMail ? undefined : 'noreferrer'}
+                  aria-label={action?.label ?? entry.label}
+                  title={action?.label ?? entry.label}
+                  onPointerEnter={(event) => revealActionHref(event, action)}
+                  onFocus={(event) => revealActionHref(event, action)}
+                  onClick={(event) => handleNetworkCardClick(event, entryIndex, action)}
+                >
+                  <span className={styles.networkIcon}>
+                    <ActionIcon type={action?.icon} />
+                  </span>
+                  <span className={styles.networkCardHeader}>
+                    <span className={styles.networkEyebrow}>{entry.eyebrow}</span>
+                    <strong>{entry.title}</strong>
+                  </span>
+                  <span className={styles.networkCardBody}>{entry.body}</span>
+                  <span className={styles.networkHandle}>
+                    {action?.obfuscatedDisplayHtml ? (
+                      <span dangerouslySetInnerHTML={{ __html: action.obfuscatedDisplayHtml }} />
+                    ) : (
+                      action?.displayLabel ?? action?.label
+                    )}
+                  </span>
+                </a>
+              );
+            })}
           </div>
         </article>
       ) : (
         <article
-          className={`${styles.detailPanel} ${isProfileSection ? styles.profileDetailPanel : ''}`}
+          key={`${activeSection.id}-${activeEntry.id}`}
+          className={`${styles.detailPanel} ${styles.contentEntering} ${isProfileSection ? styles.profileDetailPanel : ''
+            }`}
           aria-live="polite"
         >
           <div className={styles.detailContent}>
@@ -715,19 +876,29 @@ export function Menu({ onOpenProjects }: MenuProps) {
             </dl>
             {activeActions.length > 0 ? (
               <div className={styles.actionList} aria-label={`${activeEntry.label} links`}>
-                {activeActions.map((action) => (
-                  <a
-                    key={`${activeEntry.id}-${action.label}`}
-                    className={`${styles.actionButton} ${action.icon ? styles.iconActionButton : ''}`}
-                    href={action.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={action.label}
-                    title={action.label}
-                  >
-                    {action.icon ? <ActionIcon type={action.icon} /> : action.label}
-                  </a>
-                ))}
+                {activeActions.map((action) => {
+                  const actionHref = resolveActionHref(action);
+
+                  if (!actionHref) {
+                    return null;
+                  }
+
+                  const isMailLink = actionHref.startsWith('mailto:');
+
+                  return (
+                    <a
+                      key={`${activeEntry.id}-${action.label}`}
+                      className={`${styles.actionButton} ${action.icon ? styles.iconActionButton : ''}`}
+                      href={actionHref}
+                      target={isMailLink ? undefined : '_blank'}
+                      rel={isMailLink ? undefined : 'noreferrer'}
+                      aria-label={action.label}
+                      title={action.label}
+                    >
+                      {action.icon ? <ActionIcon type={action.icon} /> : action.label}
+                    </a>
+                  );
+                })}
               </div>
             ) : null}
           </div>
@@ -743,12 +914,6 @@ export function Menu({ onOpenProjects }: MenuProps) {
           ) : null}
         </article>
       )}
-
-      <div className={styles.sectionCounter} aria-hidden="true">
-        <span>{String(activeSectionIndex + 1).padStart(2, '0')}</span>
-        <i />
-        <span>{String(sections.length).padStart(2, '0')}</span>
-      </div>
     </section>
   );
 }

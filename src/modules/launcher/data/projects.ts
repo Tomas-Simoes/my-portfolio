@@ -32,7 +32,6 @@ export type Project = {
   year: string;
   timelineLabel: string;
   role: string;
-  launchPrompt: string;
   buildMeta: string;
   links: {
     label: string;
@@ -49,13 +48,13 @@ export const projects: Project[] = [
   {
     id: 'aspect-of-light',
     title: 'Aspect of Light',
-    detail: 'Souls-like prototype · Unity',
+    detail: 'Souls-like prototype in Unity',
     summary:
-      'A complete top-down souls-like vertical slice centred around exploration and a boss encounter.',
+      'A prototype of a top-down souls-like centred around exploration and challenging boss encounters.',
     description:
-      'A top-down souls-like action game built in 2023, with a full game architecture behind one explorable build and a focused boss encounter.',
+      'Developed in 2023 as the final project of my vocational course, Aspect of Light is a playable top-down designed to bring the difficult of a souls-like into a 2D world.',
     contribution:
-      'Built the core gameplay systems, including inventory, enemies, camera management, NPC dialogue, ability progression, areas, and combat flow.',
+      'Designed and developed the project leading a team of 2 developers, taking it from its initial concept to a complete playable prototype with a modular architecture that could support a larger game.',
     category: 'Game',
     builtSections: [
       {
@@ -63,20 +62,19 @@ export const projects: Project[] = [
         detail: 'Player combat, enemy behaviour and the complete boss encounter.',
       },
       {
-        title: 'Inventory & Progression',
-        detail: 'Equipment, items and an ability progression system.',
+        title: 'Ability Progression',
+        detail: 'An ability progression system with skill tree.',
       },
       {
         title: 'World Systems',
-        detail: 'NPC dialogue, camera management, areas and gameplay flow.',
+        detail: 'NPC dialogue, camera management and 2 explorable areas.',
       },
     ],
     stack: ['Unity', 'C#', 'Game Architecture'],
     year: '2023',
     timelineLabel: 'Year',
-    role: 'Game Developer',
-    launchPrompt: 'READY TO INSTALL',
-    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
+    role: 'Lead Developer',
+    buildMeta: 'Version 1.0.3 · Published July 2023',
     links: [
       {
         label: '▶ INSTALL',
@@ -122,31 +120,30 @@ export const projects: Project[] = [
     title: 'Acharya Measurement',
     detail: 'Indoor measurement · Machine learning',
     summary:
-      'A computer-vision measurement prototype for estimating indoor wall and window dimensions from photos.',
+      'A computer-vision prototype for estimating indoor wall and window dimensions from photographs.',
     description:
-      'A FamousGadget internship prototype for estimating indoor window and wall measurements from photos using machine learning and geometric calculations.',
+      'Developed during my internship at FamousGadget, the prototype explored how a single indoor photograph could be transformed into useful architectural measurements without requiring specialised scanning equipment.',
     contribution:
-      'Built a computer-vision measurement pipeline around image prediction, reference-point recognition, camera parameters, and geometric correction.',
+      'Implemented and evaluated the prototype’s end-to-end measurement approach, combining computer vision with geometric reasoning.',
     category: 'Computer Vision',
     builtSections: [
       {
         title: 'Detection Pipeline',
-        detail: 'Photo prediction flow for reference points, windows and wall features.',
+        detail: 'Image-processing flow for identifying reference points, windows and wall features.',
       },
       {
         title: 'Geometric Measurement',
-        detail: 'Camera parameters, reference scaling and correction calculations.',
+        detail: 'Estimating real-world dimensions using detected reference points and camera information.',
       },
       {
         title: 'Research Output',
-        detail: 'Experiment flow and paper-ready measurement results.',
+        detail: 'Structured experiments, evaluated measurement accuracy and contributed results used in the published paper.',
       },
     ],
     stack: ['Python', 'Ultralytics', 'YOLO', 'Geometry'],
-    year: '2025',
+    year: '2023',
     timelineLabel: 'Paper',
-    role: 'ML Developer',
-    launchPrompt: 'READY TO VIEW',
+    role: 'Intern',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     links: [
       {
@@ -162,6 +159,24 @@ export const projects: Project[] = [
     ],
     cover: 'linear-gradient(135deg, #090b0d, #24282c 52%, #f7f8f2)',
     coverImage: '/images/projects/acharya/cover.png',
+    previewMedia: [
+      {
+        src: '/images/projects/acharya/00.jpg',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/acharya/01.jpg',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/acharya/02.jpg',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/acharya/03.jpg',
+        type: 'image',
+      },
+    ],
     theme: {
       accent: '#f7f8f2',
       accentStrong: '#ffffff',
@@ -180,32 +195,31 @@ export const projects: Project[] = [
     title: 'NINF Application',
     detail: 'Student association app · UBI',
     summary:
-      'A student association app for course information, event engagement and member reward flows.',
+      'A student association app for course information, event engagement and a point-based reward system.',
     description:
-      'An application for the NINF student association at UBI, designed as a course information hub and member point system for events and rewards.',
+      'Application for the NINF student association at UBI, created to centralise academic resources and encourage student participation in association activities.',
     contribution:
-      'Built the student-facing experience around course information, event attendance, points, rewards, and backend-backed member flows.',
+      'Led the frontend development and worked closely with the backend team to define API contracts and integration requirements.',
     category: 'App',
     builtSections: [
       {
-        title: 'Member Experience',
-        detail: 'Course hub, event attendance and points balance views.',
+        title: 'Academic Hub',
+        detail: 'Centralised access to association and academic information.',
+      },
+
+      {
+        title: 'Events & Rewards',
+        detail: 'Attendance registration in events gives points which can be traded for rewards.',
       },
       {
-        title: 'Rewards Loop',
-        detail: 'Points-to-prizes flow for association participation.',
-      },
-      {
-        title: 'App Architecture',
-        detail: 'Expo screens connected to backend-backed member data.',
-      },
-    ],
+        title: 'Mobile Architecture',
+        detail: 'React Native architecture which enables both mobile and web versions.',
+      },],
     stack: ['Expo', 'React Native', 'Backend API'],
-    year: 'UBI',
-    timelineLabel: 'Context',
-    role: 'App Developer',
-    launchPrompt: 'READY TO LAUNCH',
-    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
+    year: '2026',
+    timelineLabel: 'Year',
+    role: 'Lead Developer',
+    buildMeta: "Backend services currently offline · Still haven't been published",
     links: [
       {
         label: '▶ OPEN PROJECT',
@@ -215,6 +229,24 @@ export const projects: Project[] = [
     ],
     cover: 'linear-gradient(135deg, #06111c, #173150 52%, #b8ecff)',
     coverImage: '/images/projects/ninf/cover.png',
+    previewMedia: [
+      {
+        src: '/images/projects/ninf/00.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/ninf/01.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/ninf/02.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/ninf/03.png',
+        type: 'image',
+      },
+    ],
     theme: {
       accent: '#b8ecff',
       accentStrong: '#eefbff',
@@ -256,8 +288,7 @@ export const projects: Project[] = [
     stack: ['Python', 'PennyLane', 'QAOA', 'QUBO'],
     year: '2026',
     timelineLabel: 'Year',
-    role: 'Research Developer',
-    launchPrompt: 'READY TO LAUNCH',
+    role: 'Developer',
     buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
     links: [
       {
@@ -268,6 +299,24 @@ export const projects: Project[] = [
     ],
     cover: 'linear-gradient(135deg, #0d0905, #2a2111 50%, #d9ad57)',
     coverImage: '/images/projects/chamber/cover.png',
+    previewMedia: [
+      {
+        src: '/images/projects/chamber/00.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/chamber/02.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/chamber/03.png',
+        type: 'image',
+      },
+      {
+        src: '/images/projects/chamber/04.png',
+        type: 'image',
+      },
+    ],
     theme: {
       accent: '#d9ad57',
       accentStrong: '#f4d98b',

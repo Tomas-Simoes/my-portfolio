@@ -5,7 +5,7 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: #080301;
+  background: #050607;
   color: #fff1dc;
 }
 
@@ -53,7 +53,7 @@
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  background: #000;
+  background: #050607;
   opacity: 0;
   animation: curtainFadeIn var(--curtain-duration, 2.5s) ease-in-out var(--curtain-delay, 5.5s)
     forwards;

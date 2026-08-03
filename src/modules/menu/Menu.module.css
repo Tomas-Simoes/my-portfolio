@@ -8,6 +8,7 @@
   --menu-accent-rgb: 232 121 78;
   --menu-gold: #f1c38a;
   --menu-gold-rgb: 241 195 138;
+  --startup-ease: cubic-bezier(0.16, 1, 0.3, 1);
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
@@ -43,6 +44,194 @@
     linear-gradient(90deg, transparent 7%, rgba(237, 232, 220, 0.035) 42%, transparent 72%),
     radial-gradient(ellipse at 56% 83%, rgba(232, 121, 78, 0.18), transparent 47%),
     linear-gradient(180deg, transparent 54%, rgba(0, 0, 0, 0.5));
+}
+
+.menuWaiting {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.menuStarting {
+  animation: menuStartup 640ms var(--startup-ease) both;
+}
+
+.menuStarting::before {
+  animation: menuGrainStartup 1200ms ease-out both;
+}
+
+.menuStarting::after {
+  animation: menuOverlayStartup 1300ms var(--startup-ease) both;
+}
+
+.menuStarting .waves {
+  animation: menuBackdropStartup 1300ms var(--startup-ease) both;
+  will-change: opacity, filter, scale;
+}
+
+.menuStarting .statusBar,
+.menuStarting .crossbar,
+.menuStarting .contentEntering {
+  will-change: opacity, filter, translate;
+}
+
+.menuStarting .statusBar {
+  animation: menuPanelEnter 720ms var(--startup-ease) 40ms both;
+}
+
+.menuStarting .statusBar strong,
+.menuStarting .systemStatus > *,
+.menuStarting .categoryButton,
+.menuStarting .submenuGlow,
+.menuStarting .submenu li,
+.menuStarting .detailContent > .eyebrow,
+.menuStarting .detailContent > h1,
+.menuStarting .detailContent > .bodyCopy,
+.menuStarting .metaList div,
+.menuStarting .actionList > *,
+.menuStarting .profileImageSlot,
+.menuStarting .stackHeader > *,
+.menuStarting .focusCard,
+.menuStarting .networkIntro > *,
+.menuStarting .networkCard {
+  animation: menuItemEnter 620ms var(--startup-ease) both;
+  will-change: opacity, translate;
+}
+
+.menuStarting .crossbar {
+  animation: menuPanelEnter 760ms var(--startup-ease) 180ms both;
+}
+
+.menuStarting .contentEntering {
+  animation: menuDetailPanelEnter 820ms var(--startup-ease) 440ms both;
+}
+
+.menuStarting .submenuGlow {
+  animation-name: menuLineEnter;
+  transform-origin: left center;
+}
+
+.menuStarting .statusBar strong {
+  animation-delay: 120ms;
+}
+
+.menuStarting .systemStatus > :nth-child(1) {
+  animation-delay: 170ms;
+}
+
+.menuStarting .systemStatus > :nth-child(2) {
+  animation-delay: 220ms;
+}
+
+.menuStarting .systemStatus > :nth-child(3) {
+  animation-delay: 270ms;
+}
+
+.menuStarting .categoryButton:nth-child(1) {
+  animation-delay: 260ms;
+}
+
+.menuStarting .categoryButton:nth-child(2) {
+  animation-delay: 330ms;
+}
+
+.menuStarting .categoryButton:nth-child(3) {
+  animation-delay: 400ms;
+}
+
+.menuStarting .categoryButton:nth-child(4) {
+  animation-delay: 470ms;
+}
+
+.menuStarting .categoryButton:nth-child(5) {
+  animation-delay: 540ms;
+}
+
+.menuStarting .submenuGlow {
+  animation-delay: 500ms;
+}
+
+.menuStarting .submenu li:nth-child(1) {
+  animation-delay: 560ms;
+}
+
+.menuStarting .submenu li:nth-child(2) {
+  animation-delay: 620ms;
+}
+
+.menuStarting .submenu li:nth-child(3) {
+  animation-delay: 680ms;
+}
+
+.menuStarting .submenu li:nth-child(4) {
+  animation-delay: 740ms;
+}
+
+.menuStarting .submenu li:nth-child(5) {
+  animation-delay: 800ms;
+}
+
+.menuStarting .submenu li:nth-child(6) {
+  animation-delay: 860ms;
+}
+
+.menuStarting .submenu li:nth-child(7) {
+  animation-delay: 920ms;
+}
+
+.menuStarting .detailContent > .eyebrow,
+.menuStarting .stackHeader > :nth-child(1),
+.menuStarting .networkIntro > :nth-child(1) {
+  animation-delay: 600ms;
+}
+
+.menuStarting .detailContent > h1,
+.menuStarting .stackHeader > :nth-child(2),
+.menuStarting .networkIntro > :nth-child(2) {
+  animation-delay: 680ms;
+}
+
+.menuStarting .detailContent > .bodyCopy,
+.menuStarting .stackHeader > :nth-child(3),
+.menuStarting .networkIntro > :nth-child(3) {
+  animation-delay: 760ms;
+}
+
+.menuStarting .metaList div:nth-child(1),
+.menuStarting .focusCard:nth-child(1),
+.menuStarting .networkCard:nth-child(1) {
+  animation-delay: 840ms;
+}
+
+.menuStarting .metaList div:nth-child(2),
+.menuStarting .focusCard:nth-child(2),
+.menuStarting .networkCard:nth-child(2) {
+  animation-delay: 910ms;
+}
+
+.menuStarting .metaList div:nth-child(3),
+.menuStarting .focusCard:nth-child(3),
+.menuStarting .networkCard:nth-child(3) {
+  animation-delay: 980ms;
+}
+
+.menuStarting .networkCard:nth-child(4) {
+  animation-delay: 1050ms;
+}
+
+.menuStarting .profileImageSlot {
+  animation-delay: 880ms;
+}
+
+.menuStarting .actionList > :nth-child(1) {
+  animation-delay: 1040ms;
+}
+
+.menuStarting .actionList > :nth-child(2) {
+  animation-delay: 1100ms;
+}
+
+.menuStarting .actionList > :nth-child(3) {
+  animation-delay: 1160ms;
 }
 
 .waves {
@@ -225,7 +414,7 @@
 
 .categoryRail {
   display: grid;
-  grid-template-columns: repeat(6, minmax(74px, 1fr));
+  grid-template-columns: repeat(5, minmax(74px, 1fr));
   align-items: start;
   gap: clamp(7px, 2vw, 28px);
   min-width: 0;
@@ -409,6 +598,98 @@
   box-shadow: 0 0 22px rgba(232, 121, 78, 0.26);
 }
 
+.menu[data-active-section="timeline"] .submenuButton {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding-left: 18px;
+}
+
+.menu[data-active-section="timeline"] .activeSubmenuButton {
+  transform: none;
+}
+
+.menu[data-active-section="timeline"] .entryGlyph {
+  display: none;
+}
+
+.contentEntering {
+  animation: menuDetailPanelEnter 500ms var(--startup-ease) both;
+  will-change: opacity, filter, translate;
+}
+
+.contentEntering .detailContent > .eyebrow,
+.contentEntering .detailContent > h1,
+.contentEntering .detailContent > .bodyCopy,
+.contentEntering .metaList div,
+.contentEntering .actionList > *,
+.contentEntering .profileImageSlot,
+.contentEntering .stackHeader > *,
+.contentEntering .focusCard,
+.contentEntering .networkIntro > *,
+.contentEntering .networkCard {
+  animation: menuItemEnter 440ms var(--startup-ease) both;
+  will-change: opacity, translate;
+}
+
+.contentEntering .focusCard,
+.contentEntering .networkCard,
+.contentEntering .profileImageSlot {
+  animation-name: menuCardEnter;
+}
+
+.contentEntering .detailContent > .eyebrow,
+.contentEntering .stackHeader > :nth-child(1),
+.contentEntering .networkIntro > :nth-child(1) {
+  animation-delay: 40ms;
+}
+
+.contentEntering .detailContent > h1,
+.contentEntering .stackHeader > :nth-child(2),
+.contentEntering .networkIntro > :nth-child(2) {
+  animation-delay: 90ms;
+}
+
+.contentEntering .detailContent > .bodyCopy,
+.contentEntering .stackHeader > :nth-child(3),
+.contentEntering .networkIntro > :nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.contentEntering .metaList div:nth-child(1),
+.contentEntering .focusCard:nth-child(1),
+.contentEntering .networkCard:nth-child(1) {
+  animation-delay: 210ms;
+}
+
+.contentEntering .metaList div:nth-child(2),
+.contentEntering .focusCard:nth-child(2),
+.contentEntering .networkCard:nth-child(2) {
+  animation-delay: 270ms;
+}
+
+.contentEntering .metaList div:nth-child(3),
+.contentEntering .focusCard:nth-child(3),
+.contentEntering .networkCard:nth-child(3) {
+  animation-delay: 330ms;
+}
+
+.contentEntering .networkCard:nth-child(4),
+.contentEntering .profileImageSlot {
+  animation-delay: 390ms;
+}
+
+.contentEntering .actionList > :nth-child(1) {
+  animation-delay: 420ms;
+}
+
+.contentEntering .actionList > :nth-child(2) {
+  animation-delay: 470ms;
+}
+
+.contentEntering .actionList > :nth-child(3) {
+  animation-delay: 520ms;
+}
+
 .detailPanel {
   position: absolute;
   right: max(21px, calc((100vw - 1180px) / 2));
@@ -551,7 +832,6 @@
   gap: 10px;
   overflow: hidden;
   color: rgba(237, 232, 220, 0.74);
-  cursor: pointer;
   background:
     linear-gradient(180deg, rgba(var(--focus-accent) / 0.11), rgba(232, 121, 78, 0.035)),
     rgba(14, 17, 19, 0.48);
@@ -589,9 +869,7 @@
   opacity: 0.4;
 }
 
-.focusCard:hover,
-.focusCard:focus-visible,
-.activeFocusCard {
+.focusCard:hover {
   border-color: rgba(var(--focus-accent) / 0.62);
   color: rgba(255, 250, 239, 0.94);
   box-shadow:
@@ -600,18 +878,8 @@
     0 0 28px rgba(var(--focus-accent) / 0.18);
 }
 
-.focusCard:hover,
-.focusCard:focus-visible {
+.focusCard:hover {
   transform: translateY(-3px);
-}
-
-.focusCard:focus-visible {
-  outline: 1px solid rgba(255, 250, 239, 0.78);
-  outline-offset: 3px;
-}
-
-.activeFocusCard {
-  transform: translateY(-8px);
 }
 
 .focusNumber,
@@ -676,6 +944,204 @@
   font-size: 0.66rem;
   font-weight: 800;
   line-height: 1;
+}
+
+.networkPanel {
+  position: absolute;
+  top: clamp(246px, 30vh, 326px);
+  right: max(21px, calc((100vw - 1180px) / 2));
+  left: max(21px, calc((100vw - 1180px) / 2));
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(248px, 330px) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(22px, 4vw, 54px);
+  padding: 20px 0 0 38px;
+}
+
+.networkPanel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: min(360px, 45vh);
+  background: linear-gradient(180deg, transparent, rgba(88, 169, 163, 0.78), rgba(232, 121, 78, 0.66), transparent);
+  box-shadow:
+    0 0 18px rgba(88, 169, 163, 0.28),
+    0 0 24px rgba(232, 121, 78, 0.18);
+}
+
+.networkIntro {
+  min-width: 0;
+}
+
+.networkIntro h1 {
+  max-width: 9ch;
+  margin: 0;
+  color: transparent;
+  background: linear-gradient(180deg, #fffaf0 0%, #dbeee9 42%, #d8a56e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: clamp(2.2rem, 4.4vw, 4.4rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: 0;
+  text-wrap: balance;
+  text-shadow:
+    0 0 18px rgba(88, 169, 163, 0.13),
+    0 12px 34px rgba(0, 0, 0, 0.72);
+}
+
+.networkMap {
+  min-width: 0;
+  min-height: 312px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.5vw, 18px);
+  padding: 0;
+}
+
+.networkCard {
+  --network-accent: 88 169 163;
+  min-width: 0;
+  min-height: 146px;
+  border: 1px solid rgba(237, 232, 220, 0.13);
+  border-radius: 4px;
+  padding: clamp(14px, 1.7vw, 18px);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  grid-template-rows: auto minmax(48px, 1fr) auto;
+  gap: 10px 12px;
+  overflow: hidden;
+  color: rgba(237, 232, 220, 0.76);
+  background:
+    linear-gradient(135deg, rgba(var(--network-accent) / 0.12), rgba(14, 17, 19, 0.44) 52%, rgba(14, 17, 19, 0.62)),
+    rgba(14, 17, 19, 0.62);
+  box-shadow:
+    inset 0 0 0 1px rgba(237, 232, 220, 0.035),
+    0 20px 48px rgba(0, 0, 0, 0.24);
+  text-decoration: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.networkCard:nth-child(1) {
+  --network-accent: 88 169 163;
+}
+
+.networkCard:nth-child(2) {
+  --network-accent: 96 165 250;
+}
+
+.networkCard:nth-child(3) {
+  --network-accent: 232 121 78;
+}
+
+.networkCard:nth-child(4) {
+  --network-accent: 241 195 138;
+}
+
+.networkCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(var(--network-accent) / 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(255, 250, 239, 0.035), transparent 42%);
+  opacity: 0.52;
+}
+
+.networkCard:hover,
+.networkCard:focus-visible {
+  border-color: rgba(var(--network-accent) / 0.64);
+  color: rgba(255, 250, 239, 0.96);
+  box-shadow:
+    inset 0 0 0 1px rgba(237, 232, 220, 0.07),
+    0 24px 58px rgba(0, 0, 0, 0.32),
+    0 0 34px rgba(var(--network-accent) / 0.18);
+  transform: translateY(-4px);
+}
+
+.networkCard:focus-visible {
+  outline: 1px solid rgba(255, 250, 239, 0.78);
+  outline-offset: 3px;
+}
+
+.networkIcon,
+.networkCardHeader,
+.networkCardBody,
+.networkHandle {
+  position: relative;
+  z-index: 1;
+}
+
+.networkIcon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border: 1px solid rgba(var(--network-accent) / 0.42);
+  border-radius: 3px;
+  color: rgba(255, 250, 239, 0.86);
+  background: rgba(5, 6, 7, 0.36);
+  box-shadow: 0 0 20px rgba(var(--network-accent) / 0.12);
+}
+
+.networkIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.networkCardHeader {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+}
+
+.networkEyebrow {
+  color: rgba(var(--network-accent) / 0.92);
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.networkCardHeader strong {
+  overflow-wrap: anywhere;
+  color: #fffaf0;
+  font-size: clamp(1.1rem, 1.45vw, 1.36rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.networkCardBody {
+  grid-column: 1 / -1;
+  color: rgba(237, 232, 220, 0.72);
+  font-size: clamp(0.78rem, 1vw, 0.88rem);
+  line-height: 1.42;
+}
+
+.networkHandle {
+  grid-column: 1 / -1;
+  align-self: end;
+  min-width: 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--network-accent) / 0.26);
+  overflow-wrap: anywhere;
+  color: rgba(255, 250, 239, 0.84);
+  font-size: clamp(0.72rem, 0.95vw, 0.8rem);
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .eyebrow {
@@ -803,6 +1269,130 @@
   transform: translateY(-1px);
 }
 
+@keyframes menuStartup {
+  from {
+    opacity: 0;
+    filter: saturate(0.75);
+    scale: 0.992;
+  }
+
+  to {
+    opacity: 1;
+    filter: saturate(1);
+    scale: 1;
+  }
+}
+
+@keyframes menuBackdropStartup {
+  from {
+    opacity: 0;
+    filter: blur(12px) saturate(0.72);
+    scale: 1.035;
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0) saturate(1);
+    scale: 1;
+  }
+}
+
+@keyframes menuOverlayStartup {
+  from {
+    opacity: 0.18;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes menuGrainStartup {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.075;
+  }
+}
+
+@keyframes menuPanelEnter {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    translate: 0 18px;
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    translate: 0 0;
+  }
+}
+
+@keyframes menuDetailPanelEnter {
+  from {
+    opacity: 0;
+    clip-path: inset(16px 0 0 0);
+    filter: blur(8px);
+    translate: 0 18px;
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+    filter: blur(0);
+    translate: 0 0;
+  }
+}
+
+@keyframes menuItemEnter {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes menuCardEnter {
+  from {
+    opacity: 0;
+    clip-path: inset(14% 10% 14% 10% round 4px);
+    filter: blur(8px) saturate(0.72) brightness(0.8);
+    translate: 0 12px;
+  }
+
+  64% {
+    opacity: 1;
+    clip-path: inset(0 round 4px);
+    filter: blur(0) saturate(1.08) brightness(1.08);
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0 round 4px);
+    filter: none;
+    translate: 0 0;
+  }
+}
+
+@keyframes menuLineEnter {
+  from {
+    opacity: 0;
+    scale: 0.22 1;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1 1;
+  }
+}
+
 @keyframes menuWaveFloat {
   from {
     transform: translate3d(-1.4vw, 0, 0) scaleY(1);
@@ -828,33 +1418,13 @@
   outline-offset: 3px;
 }
 
-.sectionCounter {
-  position: absolute;
-  left: max(21px, calc((100vw - 1180px) / 2));
-  bottom: clamp(20px, 5vh, 44px);
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: rgba(237, 232, 220, 0.52);
-  font-size: 0.72rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.sectionCounter i {
-  width: 46px;
-  height: 1px;
-  background: rgba(237, 232, 220, 0.24);
-}
-
 @media (max-width: 900px) {
   .crossbar {
     margin-top: clamp(36px, 10vh, 72px);
   }
 
   .categoryRail {
-    grid-template-columns: repeat(6, minmax(56px, 1fr));
+    grid-template-columns: repeat(5, minmax(56px, 1fr));
     gap: 4px;
   }
 
@@ -891,11 +1461,30 @@
     margin: clamp(12px, 3vh, 28px) auto 30px;
   }
 
+  .networkPanel {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    grid-template-columns: minmax(0, 1fr);
+    width: min(760px, calc(100vw - 42px));
+    margin: clamp(12px, 3vh, 28px) auto 30px;
+  }
+
   .stackPanel::before {
     height: min(100%, 360px);
   }
 
+  .networkPanel::before {
+    height: min(100%, 390px);
+  }
+
   .stackPanel h1 {
+    max-width: 14ch;
+    font-size: clamp(2rem, 7vw, 3.8rem);
+  }
+
+  .networkIntro h1 {
     max-width: 14ch;
     font-size: clamp(2rem, 7vw, 3.8rem);
   }
@@ -904,8 +1493,16 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .networkMap {
+    min-height: 0;
+  }
+
   .focusCard {
     min-height: 248px;
+  }
+
+  .networkCard {
+    min-height: 150px;
   }
 
   .profileDetailPanel {
@@ -973,11 +1570,19 @@
     top: clamp(230px, 33vh, 260px);
   }
 
+  .networkPanel {
+    top: clamp(224px, 33vh, 258px);
+  }
+
   .detailPanel h1 {
     font-size: clamp(1.9rem, 4vw, 4rem);
   }
 
   .stackPanel h1 {
+    font-size: clamp(1.9rem, 3.8vw, 3.7rem);
+  }
+
+  .networkIntro h1 {
     font-size: clamp(1.9rem, 3.8vw, 3.7rem);
   }
 
@@ -988,6 +1593,14 @@
 
   .focusCard {
     min-height: 224px;
+  }
+
+  .networkMap {
+    min-height: 286px;
+  }
+
+  .networkCard {
+    min-height: 136px;
   }
 
   .metaList {
@@ -1092,21 +1705,47 @@
     margin-top: 14px;
   }
 
+  .networkPanel {
+    width: min(100% - 28px, 1180px);
+    padding: 12px 0 0 24px;
+    margin-top: 14px;
+    margin-bottom: clamp(74px, 18vh, 150px);
+  }
+
   .stackFocusGrid {
     grid-template-columns: 1fr;
+  }
+
+  .networkMap {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    min-height: 0;
+    padding: 0;
   }
 
   .focusCard {
     min-height: 0;
   }
 
-  .focusCard:hover,
-  .focusCard:focus-visible {
+  .networkCard {
+    min-height: 0;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 9px 10px;
+    padding: 13px;
+  }
+
+  .focusCard:hover {
     transform: translateX(3px);
   }
 
-  .activeFocusCard {
-    transform: translateX(6px);
+  .networkCard:hover,
+  .networkCard:focus-visible {
+    transform: translateX(3px);
+  }
+
+  .networkIcon {
+    width: 42px;
+    height: 42px;
   }
 
   .profileDetailPanel {
@@ -1140,14 +1779,6 @@
 
   .actionButton:not(.iconActionButton) {
     width: 100%;
-  }
-
-  .sectionCounter {
-    position: relative;
-    left: auto;
-    bottom: auto;
-    width: min(100% - 28px, 1180px);
-    margin: 0 auto 22px;
   }
 
   .menu[data-active-section="timeline"] .submenuShell {
@@ -1201,6 +1832,7 @@
   }
 
   .menu[data-active-section="timeline"] .entryGlyph {
+    display: grid;
     width: 18px;
     height: 18px;
     border-radius: 999px;
@@ -1258,8 +1890,55 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .menu,
+  .waves,
+  .statusBar,
+  .categoryButton,
+  .categoryButton svg,
+  .submenuButton,
+  .entryGlyph,
+  .detailPanel,
+  .focusCard,
+  .networkCard,
+  .actionButton {
+    transition-duration: 1ms;
+  }
+
   .waves::before,
-  .waveCanvas {
+  .waveCanvas,
+  .menuStarting,
+  .menuStarting::before,
+  .menuStarting::after,
+  .menuStarting .waves,
+  .menuStarting .statusBar,
+  .menuStarting .statusBar strong,
+  .menuStarting .systemStatus > *,
+  .menuStarting .crossbar,
+  .menuStarting .categoryButton,
+  .menuStarting .submenuGlow,
+  .menuStarting .submenu li,
+  .menuStarting .contentEntering,
+  .menuStarting .detailContent > .eyebrow,
+  .menuStarting .detailContent > h1,
+  .menuStarting .detailContent > .bodyCopy,
+  .menuStarting .metaList div,
+  .menuStarting .actionList > *,
+  .menuStarting .profileImageSlot,
+  .menuStarting .stackHeader > *,
+  .menuStarting .focusCard,
+  .menuStarting .networkIntro > *,
+  .menuStarting .networkCard,
+  .contentEntering,
+  .contentEntering .detailContent > .eyebrow,
+  .contentEntering .detailContent > h1,
+  .contentEntering .detailContent > .bodyCopy,
+  .contentEntering .metaList div,
+  .contentEntering .actionList > *,
+  .contentEntering .profileImageSlot,
+  .contentEntering .stackHeader > *,
+  .contentEntering .focusCard,
+  .contentEntering .networkIntro > *,
+  .contentEntering .networkCard {
     animation: none;
   }
 }

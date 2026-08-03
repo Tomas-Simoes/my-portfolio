@@ -23,8 +23,14 @@ const CENTER_CLEARANCE_RADIUS = 3.2;
 const POSITION_ATTEMPTS = 80;
 const { memoryBlocks } = BOOT_SCENE_PALETTE;
 const BLOCK_BASE_FOG_COLOR = new Color(memoryBlocks.baseFog);
-const BLOCK_BASE_FOG_BOTTOM_Y = 2.2;
-const BLOCK_BASE_FOG_TOP_Y = 8.6;
+const BLOCK_BASE_FOG_BOTTOM_Y = 6.8;
+const BLOCK_BASE_FOG_TOP_Y = 15.8;
+const BLOCK_BASE_VOID_BOTTOM_Y = 4.8;
+const BLOCK_BASE_VOID_TOP_Y = 12.8;
+const BLOCK_DISTANCE_FOG_NEAR = 11;
+const BLOCK_DISTANCE_FOG_FAR = 24;
+const BLOCK_DISTANCE_VOID_NEAR = 16;
+const BLOCK_DISTANCE_VOID_FAR = 27;
 
 function getBlockFootprintRadius(scale: Vector3) {
   return Math.hypot(scale[0] / 2, scale[2] / 2);
@@ -177,6 +183,12 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
     shader.uniforms.uBlockBaseFogColor = { value: BLOCK_BASE_FOG_COLOR };
     shader.uniforms.uBlockBaseFogBottomY = { value: BLOCK_BASE_FOG_BOTTOM_Y };
     shader.uniforms.uBlockBaseFogTopY = { value: BLOCK_BASE_FOG_TOP_Y };
+    shader.uniforms.uBlockBaseVoidBottomY = { value: BLOCK_BASE_VOID_BOTTOM_Y };
+    shader.uniforms.uBlockBaseVoidTopY = { value: BLOCK_BASE_VOID_TOP_Y };
+    shader.uniforms.uBlockDistanceFogNear = { value: BLOCK_DISTANCE_FOG_NEAR };
+    shader.uniforms.uBlockDistanceFogFar = { value: BLOCK_DISTANCE_FOG_FAR };
+    shader.uniforms.uBlockDistanceVoidNear = { value: BLOCK_DISTANCE_VOID_NEAR };
+    shader.uniforms.uBlockDistanceVoidFar = { value: BLOCK_DISTANCE_VOID_FAR };
 
     shader.vertexShader = shader.vertexShader
       .replace(
@@ -184,6 +196,7 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
         [
           "#include <common>",
           "varying float vBlockWorldY;",
+          "varying float vBlockViewDepth;",
         ].join("\n"),
       )
       .replace(
@@ -191,6 +204,13 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
         [
           "#include <worldpos_vertex>",
           "vBlockWorldY = (modelMatrix * vec4(transformed, 1.0)).y;",
+        ].join("\n"),
+      )
+      .replace(
+        "#include <project_vertex>",
+        [
+          "#include <project_vertex>",
+          "vBlockViewDepth = -mvPosition.z;",
         ].join("\n"),
       );
 
@@ -202,7 +222,14 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
           "uniform vec3 uBlockBaseFogColor;",
           "uniform float uBlockBaseFogBottomY;",
           "uniform float uBlockBaseFogTopY;",
+          "uniform float uBlockBaseVoidBottomY;",
+          "uniform float uBlockBaseVoidTopY;",
+          "uniform float uBlockDistanceFogNear;",
+          "uniform float uBlockDistanceFogFar;",
+          "uniform float uBlockDistanceVoidNear;",
+          "uniform float uBlockDistanceVoidFar;",
           "varying float vBlockWorldY;",
+          "varying float vBlockViewDepth;",
         ].join("\n"),
       )
       .replace(
@@ -210,7 +237,14 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
         [
           "#include <fog_fragment>",
           "float blockBaseFog = 1.0 - smoothstep(uBlockBaseFogBottomY, uBlockBaseFogTopY, vBlockWorldY);",
-          "gl_FragColor.rgb = mix(gl_FragColor.rgb, uBlockBaseFogColor, blockBaseFog);",
+          "float blockDistanceFog = smoothstep(uBlockDistanceFogNear, uBlockDistanceFogFar, vBlockViewDepth);",
+          "float blockBaseVisibility = smoothstep(uBlockBaseVoidBottomY, uBlockBaseVoidTopY, vBlockWorldY);",
+          "float blockDistanceVisibility = 1.0 - smoothstep(uBlockDistanceVoidNear, uBlockDistanceVoidFar, vBlockViewDepth);",
+          "float blockVoidFog = max(blockBaseFog, blockDistanceFog);",
+          "float blockVisibility = min(blockBaseVisibility, blockDistanceVisibility);",
+          "gl_FragColor.rgb = mix(gl_FragColor.rgb, uBlockBaseFogColor, blockVoidFog);",
+          "gl_FragColor.a *= blockVisibility;",
+          "if (gl_FragColor.a < 0.015) discard;",
         ].join("\n"),
       );
   }, []);
@@ -224,6 +258,7 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
       metalness={0.02}
       roughness={0.68}
       side={DoubleSide}
+      transparent
       onBeforeCompile={applyBaseFog}
     />
   );

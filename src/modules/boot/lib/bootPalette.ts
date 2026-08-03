@@ -24,7 +24,7 @@ export const BOOT_SCENE_PALETTES = {
       lowerShadow: '#000000',
     },
     memoryBlocks: {
-      baseFog: '#07030a',
+      baseFog: '#040206',
       emissive: '#06050d',
       top: '#aeb7bd',
       bottom: '#111018',
@@ -51,7 +51,7 @@ export const BOOT_SCENE_PALETTES = {
   },
   orange: {
     world: {
-      background: '#080301',
+      background: '#050607',
       fog: '#170704',
       ambient: '#2a1206',
       hemisphereSky: '#96501d',
@@ -74,7 +74,7 @@ export const BOOT_SCENE_PALETTES = {
       lowerShadow: '#000000',
     },
     memoryBlocks: {
-      baseFog: '#170704',
+      baseFog: '#050607',
       emissive: '#130806',
       top: '#d6b999',
       bottom: '#180c08',

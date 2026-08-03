@@ -104,8 +104,6 @@
 
 .launcherStarting .identity strong,
 .launcherStarting .menuBackButton,
-.launcherStarting .identity > span,
-.launcherStarting .nav a,
 .launcherStarting .libraryBar > *,
 .launcherStarting .carouselControls > button,
 .launcherStarting .kicker,
@@ -126,22 +124,6 @@
 
 .launcherStarting .menuBackButton {
   animation-delay: 100ms;
-}
-
-.launcherStarting .identity > span {
-  animation-delay: 180ms;
-}
-
-.launcherStarting .nav a:nth-child(1) {
-  animation-delay: 200ms;
-}
-
-.launcherStarting .nav a:nth-child(2) {
-  animation-delay: 250ms;
-}
-
-.launcherStarting .nav a:nth-child(3) {
-  animation-delay: 300ms;
 }
 
 .launcherStarting .carouselShell {
@@ -310,40 +292,6 @@
 .menuBackButton:focus-visible {
   outline: 1px solid var(--orange-400);
   outline-offset: 3px;
-}
-
-.identity > span {
-  display: flex;
-  gap: 7px;
-  align-items: center;
-  color: var(--text-muted);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  transition: color var(--theme-transition);
-}
-
-.identity i {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #6ee7b7;
-  box-shadow: 0 0 16px rgba(110, 231, 183, 0.5);
-}
-
-.nav {
-  display: flex;
-  gap: clamp(18px, 4vw, 42px);
-  align-items: center;
-}
-
-.nav a {
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color var(--theme-transition);
-}
-
-.nav a:hover {
-  color: var(--orange-400);
 }
 
 .carouselShell {
@@ -779,6 +727,23 @@
     border-color var(--theme-transition);
 }
 
+.previewWindowButton {
+  appearance: none;
+  padding: 0;
+  color: inherit;
+  cursor: zoom-in;
+}
+
+.previewWindowButton:hover,
+.previewWindowButton:focus-visible {
+  border-color: rgb(var(--theme-accent-rgb) / 0.72);
+}
+
+.previewWindowButton:focus-visible {
+  outline: 1px solid var(--orange-400);
+  outline-offset: 3px;
+}
+
 .previewWindow::before {
   content: "";
   position: absolute;
@@ -800,6 +765,130 @@
   object-fit: cover;
   object-position: center;
   filter: saturate(0.95) contrast(1.04);
+}
+
+.previewWindowButton .previewImage {
+  transition:
+    filter 180ms ease,
+    transform 240ms ease;
+}
+
+.previewFullscreenIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(var(--theme-text-rgb) / 0.26);
+  border-radius: 3px;
+  color: var(--text-main);
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(var(--theme-text-rgb) / 0.12), rgb(var(--theme-text-rgb) / 0.04)),
+    rgb(var(--theme-background-rgb) / 0.62);
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--theme-background-rgb) / 0.44),
+    0 10px 30px rgb(0 0 0 / 0.34);
+  transition:
+    background-color var(--theme-transition),
+    border-color var(--theme-transition),
+    color var(--theme-transition);
+}
+
+.previewFullscreenIcon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.previewWindowButton:hover .previewImage,
+.previewWindowButton:focus-visible .previewImage {
+  filter: saturate(1.02) contrast(1.08);
+  transform: scale(1.012);
+}
+
+.previewWindowButton:hover .previewFullscreenIcon,
+.previewWindowButton:focus-visible .previewFullscreenIcon {
+  border-color: rgb(var(--theme-accent-rgb) / 0.68);
+  color: var(--orange-400);
+  background:
+    linear-gradient(180deg, rgb(var(--theme-accent-rgb) / 0.2), rgb(var(--theme-accent-rgb) / 0.06)),
+    rgb(var(--theme-background-rgb) / 0.68);
+}
+
+.fullscreenPreview {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 42px);
+  background:
+    linear-gradient(135deg, rgb(var(--theme-accent-rgb) / 0.12), transparent 44%),
+    linear-gradient(180deg, rgb(var(--theme-background-rgb) / 0.62), rgb(var(--theme-background-rgb) / 0.76));
+  backdrop-filter: blur(8px) saturate(0.88);
+  cursor: zoom-out;
+}
+
+.fullscreenImage,
+.fullscreenVideo {
+  display: block;
+  width: auto;
+  max-width: min(96vw, 1600px);
+  max-height: 92vh;
+  border: 1px solid rgb(var(--theme-accent-rgb) / 0.42);
+  border-radius: 4px;
+  object-fit: contain;
+  background: var(--black-900);
+  box-shadow:
+    0 0 0 1px rgb(var(--theme-text-rgb) / 0.08),
+    0 24px 90px rgb(0 0 0 / 0.64),
+    0 0 52px rgb(var(--theme-accent-rgb) / 0.14);
+  cursor: default;
+}
+
+.fullscreenClose {
+  position: fixed;
+  top: clamp(14px, 3vw, 30px);
+  right: clamp(14px, 3vw, 30px);
+  z-index: 31;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgb(var(--theme-accent-rgb) / 0.42);
+  border-radius: 4px;
+  padding: 0;
+  color: var(--text-main);
+  cursor: pointer;
+  background:
+    linear-gradient(180deg, rgb(var(--theme-accent-rgb) / 0.16), rgb(var(--theme-accent-rgb) / 0.06)),
+    rgb(var(--theme-surface-rgb) / 0.86);
+  box-shadow: 0 16px 42px rgb(0 0 0 / 0.36);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1;
+  transition:
+    background-color var(--theme-transition),
+    border-color var(--theme-transition),
+    color var(--theme-transition);
+}
+
+.fullscreenClose:hover,
+.fullscreenClose:focus-visible {
+  border-color: var(--orange-400);
+  color: var(--orange-400);
+}
+
+.fullscreenClose:focus-visible {
+  outline: 1px solid var(--orange-400);
+  outline-offset: 3px;
 }
 
 .mediaStrip {
@@ -830,14 +919,6 @@
     border-color var(--theme-transition);
 }
 
-.mediaThumb::before {
-  content: "";
-  position: absolute;
-  inset: auto 10px 10px;
-  height: 2px;
-  background: rgb(var(--theme-text-rgb) / 0.16);
-}
-
 .mediaThumb:focus-visible {
   outline: 1px solid var(--orange-400);
   outline-offset: 3px;
@@ -845,6 +926,7 @@
 
 .mediaStrip img,
 .mediaStrip video {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -859,16 +941,6 @@
   justify-items: start;
   gap: 8px;
   margin-top: 20px;
-}
-
-.launchPrompt {
-  color: var(--orange-400);
-  font-size: 0.72rem;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  transition: color var(--theme-transition);
 }
 
 .actions {
@@ -1183,16 +1255,8 @@
     margin-bottom: 34px;
   }
 
-  .nav {
-    gap: 14px;
-  }
-
   .identity {
     gap: 12px;
-  }
-
-  .identity > span {
-    display: none;
   }
 
   .carouselShell {
@@ -1302,16 +1366,6 @@
     padding-inline: 12px;
   }
 
-  .nav {
-    width: 100%;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .nav a {
-    font-size: 0.76rem;
-  }
-
   .previewPanel {
     min-height: clamp(190px, 56vw, 240px);
   }
@@ -1333,8 +1387,6 @@
   .topbar strong,
   .topbar strong::after,
   .menuBackButton,
-  .identity > span,
-  .nav a,
   .libraryBar,
   .libraryBar strong,
   .carouselControls > button,
@@ -1353,15 +1405,16 @@
   .developmentDetails summary,
   .stack,
   .launchDock,
-  .launchPrompt,
   .meta dt,
   .meta dd,
   .previewPanel,
   .previewWindow,
+  .previewWindowButton,
   .previewWindow::before,
   .previewImage,
+  .previewFullscreenIcon,
+  .fullscreenClose,
   .mediaThumb,
-  .mediaThumb::before,
   .actions a,
   .buildMeta {
     transition-duration: 1ms;
@@ -1372,8 +1425,6 @@
   .launcherStarting .themeBackdrop,
   .launcherStarting .topbar,
   .launcherStarting .identity strong,
-  .launcherStarting .identity > span,
-  .launcherStarting .nav a,
   .launcherStarting .carouselShell,
   .launcherStarting .libraryBar > *,
   .launcherStarting .carouselControls > button,

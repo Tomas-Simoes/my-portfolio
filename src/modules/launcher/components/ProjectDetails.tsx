@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Project, ProjectMedia } from '../data/projects';
 import styles from '../GameLauncher.module.css';
 
@@ -45,6 +45,8 @@ function MediaThumb({ media }: { media: ProjectMedia }) {
 
 export function ProjectDetails({ project }: ProjectDetailsProps) {
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+  const [fullscreenMedia, setFullscreenMedia] = useState<ProjectMedia | undefined>();
+  const fullscreenCloseRef = useRef<HTMLButtonElement | null>(null);
   const coverMedia = project.coverImage
     ? ({ src: project.coverImage, type: 'image' } satisfies ProjectMedia)
     : undefined;
@@ -54,10 +56,16 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
 
   useEffect(() => {
     setActiveMediaIndex(0);
+    setFullscreenMedia(undefined);
   }, [project.id]);
 
   useEffect(() => {
-    if (!primaryPreview || primaryPreview.type !== 'image' || mediaStripItems.length < 2) {
+    if (
+      fullscreenMedia ||
+      !primaryPreview ||
+      primaryPreview.type !== 'image' ||
+      mediaStripItems.length < 2
+    ) {
       return;
     }
 
@@ -66,7 +74,30 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
     }, IMAGE_PREVIEW_DURATION_MS);
 
     return () => window.clearTimeout(timer);
-  }, [mediaStripItems.length, primaryPreview]);
+  }, [fullscreenMedia, mediaStripItems.length, primaryPreview]);
+
+  useEffect(() => {
+    if (!fullscreenMedia) {
+      return;
+    }
+
+    const previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    fullscreenCloseRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setFullscreenMedia(undefined);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [fullscreenMedia]);
 
   function showNextMedia() {
     if (mediaStripItems.length < 2) {
@@ -75,6 +106,22 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
 
     setActiveMediaIndex((currentIndex) => (currentIndex + 1) % mediaStripItems.length);
   }
+
+  function openFullscreenPreview() {
+    if (!primaryPreview) {
+      return;
+    }
+
+    setFullscreenMedia(primaryPreview);
+  }
+
+  const previewContent = primaryPreview ? (
+    <PreviewMedia
+      className={styles.previewImage}
+      media={primaryPreview}
+      onEnded={showNextMedia}
+    />
+  ) : null;
 
   return (
     <footer className={styles.gameInfo} aria-live="polite">
@@ -111,7 +158,6 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
           <p className={styles.stack}>{project.stack.join(' · ')}</p>
 
           <div className={styles.launchDock}>
-            <span className={styles.launchPrompt}>{project.launchPrompt}</span>
             <div className={styles.actions}>
               {project.links.map((link) => (
                 <a
@@ -133,15 +179,27 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
 
         <div className={styles.sidePanel}>
           <aside className={styles.previewPanel} aria-label={`${project.title} media`}>
-            <div className={styles.previewWindow}>
-              {primaryPreview ? (
-                <PreviewMedia
-                  className={styles.previewImage}
-                  media={primaryPreview}
-                  onEnded={showNextMedia}
-                />
-              ) : null}
-            </div>
+            {primaryPreview ? (
+              <button
+                className={`${styles.previewWindow} ${styles.previewWindowButton}`}
+                type="button"
+                onClick={openFullscreenPreview}
+                aria-label={`Open ${project.title} ${primaryPreview.type} full screen`}
+                title="Open full screen"
+              >
+                {previewContent}
+                <span className={styles.previewFullscreenIcon} aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M4 9V4h5" />
+                    <path d="M20 9V4h-5" />
+                    <path d="M4 15v5h5" />
+                    <path d="M20 15v5h-5" />
+                  </svg>
+                </span>
+              </button>
+            ) : (
+              <div className={styles.previewWindow}>{previewContent}</div>
+            )}
             <div
               className={styles.mediaStrip}
               aria-label={`${project.title} media previews`}
@@ -181,6 +239,43 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
           </div>
         </div>
       </div>
+      {fullscreenMedia ? (
+        <div
+          className={styles.fullscreenPreview}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${project.title} full screen ${fullscreenMedia.type}`}
+          onClick={() => setFullscreenMedia(undefined)}
+        >
+          <button
+            ref={fullscreenCloseRef}
+            className={styles.fullscreenClose}
+            type="button"
+            onClick={() => setFullscreenMedia(undefined)}
+            aria-label="Close full screen media"
+          >
+            X
+          </button>
+          {fullscreenMedia.type === 'video' ? (
+            <video
+              className={styles.fullscreenVideo}
+              src={fullscreenMedia.src}
+              controls
+              autoPlay
+              muted
+              playsInline
+              onClick={(event) => event.stopPropagation()}
+            />
+          ) : (
+            <img
+              className={styles.fullscreenImage}
+              src={fullscreenMedia.src}
+              alt=""
+              onClick={(event) => event.stopPropagation()}
+            />
+          )}
+        </div>
+      ) : null}
     </footer>
   );
 }

@@ -136,16 +136,7 @@ export function GameLauncher({ onBackToMenu }: GameLauncherProps) {
             </button>
           ) : null}
           <strong>Tomás Simões</strong>
-          <span>
-            <i />
-            Online
-          </span>
         </div>
-        <nav className={styles.nav} aria-label="Portfolio navigation">
-          <a href="#about">Library</a>
-          <a href="#cv">Career</a>
-          <a href="#contact">Contact</a>
-        </nav>
       </header>
 
       <GameCarousel
