@@ -706,7 +706,9 @@ export function Menu({ onOpenProjects }: MenuProps) {
       </div>
 
       <header className={styles.statusBar}>
-        <strong>Tomás Simões</strong>
+        <strong className={styles.brandLogo}>
+          <img src="/images/logo.png" alt="Tomás Simões" />
+        </strong>
         <div className={styles.systemStatus}>
           <time dateTime={clock.toISOString()}>{formatMenuClock(clock)}</time>
           <span className={styles.signal} aria-hidden="true">
