@@ -120,6 +120,23 @@
 }
 
 @media (max-width: 560px) {
+  .canvasStage canvas {
+    filter: brightness(1.14) saturate(1.24);
+  }
+
+  .canvasStage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(140deg, rgba(255, 111, 28, 0.22), rgba(255, 111, 28, 0.06) 34%, transparent 62%),
+      linear-gradient(32deg, rgba(42, 111, 255, 0.16), transparent 38%, rgba(61, 187, 255, 0.1) 78%, transparent);
+    mix-blend-mode: screen;
+    opacity: 0.92;
+  }
+
   .titlePlate {
     place-items: center;
     padding-inline: 18px;

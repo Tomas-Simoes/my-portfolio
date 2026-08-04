@@ -16,6 +16,15 @@ type FogComponent = {
 };
 
 const { memoryFog } = BOOT_SCENE_PALETTE;
+const MOBILE_FOG_OPACITY_MULTIPLIERS: Record<string, number> = {
+  "ember-left": 1.8,
+  "cobalt-right": 2.35,
+  "hot-center": 2,
+  "cyan-lift": 3.2,
+  "violet-roof": 2.4,
+  "black-pocket": 0.18,
+  "lower-shadow": 0.25,
+};
 
 const FOG_COMPONENTS: FogComponent[] = [
   {
@@ -176,7 +185,21 @@ function createFogTexture() {
   return texture;
 }
 
-export function MemoryFog() {
+type MemoryFogProps = {
+  mobileLayout?: boolean;
+};
+
+function getFogOpacity(component: FogComponent, mobileLayout: boolean) {
+  if (!mobileLayout) {
+    return component.opacity;
+  }
+
+  const opacityMultiplier = MOBILE_FOG_OPACITY_MULTIPLIERS[component.id] ?? 1;
+
+  return Math.min(component.opacity * opacityMultiplier, 0.52);
+}
+
+export function MemoryFog({ mobileLayout = false }: MemoryFogProps) {
   const texture = useMemo(createFogTexture, []);
 
   useEffect(() => {
@@ -191,7 +214,7 @@ export function MemoryFog() {
             map={texture}
             color={component.color}
             transparent
-            opacity={component.opacity}
+            opacity={getFogOpacity(component, mobileLayout)}
             blending={component.blendMode === "shadow" ? NormalBlending : AdditiveBlending}
             rotation={component.rotation}
             depthWrite={false}

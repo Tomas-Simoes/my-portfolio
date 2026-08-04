@@ -31,6 +31,88 @@ const BLOCK_DISTANCE_FOG_NEAR = 11;
 const BLOCK_DISTANCE_FOG_FAR = 24;
 const BLOCK_DISTANCE_VOID_NEAR = 16;
 const BLOCK_DISTANCE_VOID_FAR = 27;
+const MOBILE_BLOCK_BASE_FOG_BOTTOM_Y = 3.8;
+const MOBILE_BLOCK_BASE_FOG_TOP_Y = 13.8;
+const MOBILE_BLOCK_BASE_VOID_BOTTOM_Y = 2.6;
+const MOBILE_BLOCK_BASE_VOID_TOP_Y = 8.8;
+const MOBILE_BLOCK_DISTANCE_FOG_NEAR = 26;
+const MOBILE_BLOCK_DISTANCE_FOG_FAR = 58;
+const MOBILE_BLOCK_DISTANCE_VOID_NEAR = 42;
+const MOBILE_BLOCK_DISTANCE_VOID_FAR = 70;
+const MOBILE_MEMORY_BLOCKS: MemoryBlock[] = [
+  {
+    id: "mobile-block-0",
+    position: [-6.8, FLOOR_Y, -10.6],
+    rotation: [0, 0, 0],
+    scale: [1.45, 18, 1.45],
+  },
+  {
+    id: "mobile-block-1",
+    position: [6.4, FLOOR_Y, -9.4],
+    rotation: [0, 0, 0],
+    scale: [1.45, 15, 1.45],
+  },
+  {
+    id: "mobile-block-2",
+    position: [-7.6, FLOOR_Y, -4.2],
+    rotation: [0, 0, 0],
+    scale: [1.35, 14, 1.35],
+  },
+  {
+    id: "mobile-block-3",
+    position: [7.8, FLOOR_Y, -3.1],
+    rotation: [0, 0, 0],
+    scale: [1.35, 17, 1.35],
+  },
+  {
+    id: "mobile-block-4",
+    position: [-8.2, FLOOR_Y, 2.7],
+    rotation: [0, 0, 0],
+    scale: [1.45, 13, 1.45],
+  },
+  {
+    id: "mobile-block-5",
+    position: [8.4, FLOOR_Y, 2.4],
+    rotation: [0, 0, 0],
+    scale: [1.45, 16, 1.45],
+  },
+  {
+    id: "mobile-block-6",
+    position: [-5.9, FLOOR_Y, 8.5],
+    rotation: [0, 0, 0],
+    scale: [1.35, 15, 1.35],
+  },
+  {
+    id: "mobile-block-7",
+    position: [5.8, FLOOR_Y, 9.5],
+    rotation: [0, 0, 0],
+    scale: [1.35, 19, 1.35],
+  },
+  {
+    id: "mobile-block-8",
+    position: [-2.6, FLOOR_Y, -13.2],
+    rotation: [0, 0, 0],
+    scale: [1.3, 12, 1.3],
+  },
+  {
+    id: "mobile-block-9",
+    position: [2.7, FLOOR_Y, 13.1],
+    rotation: [0, 0, 0],
+    scale: [1.3, 14, 1.3],
+  },
+  {
+    id: "mobile-block-10",
+    position: [-9.5, FLOOR_Y, -0.8],
+    rotation: [0, 0, 0],
+    scale: [1.25, 11, 1.25],
+  },
+  {
+    id: "mobile-block-11",
+    position: [9.7, FLOOR_Y, -0.9],
+    rotation: [0, 0, 0],
+    scale: [1.25, 12.5, 1.25],
+  },
+];
 
 function getBlockFootprintRadius(scale: Vector3) {
   return Math.hypot(scale[0] / 2, scale[2] / 2);
@@ -165,30 +247,61 @@ export function createMemoryBlocks(blockCount = BLOCK_COUNT): MemoryBlock[] {
   return separateBlocks(blocks);
 }
 
+function cloneVector3(vector: Vector3): Vector3 {
+  return [vector[0], vector[1], vector[2]];
+}
+
+export function createMobileMemoryBlocks(): MemoryBlock[] {
+  return MOBILE_MEMORY_BLOCKS.map((block) => ({
+    ...block,
+    position: cloneVector3(block.position),
+    rotation: cloneVector3(block.rotation),
+    scale: cloneVector3(block.scale),
+  }));
+}
+
 type BlockFaceProps = {
   position: Vector3;
   rotation: Vector3;
   size: FaceSize;
   texture: Texture;
   tint: string;
+  colorBoost?: boolean;
 };
 
 type BlockFaceMaterialProps = {
   texture: Texture;
   tint: string;
+  colorBoost?: boolean;
 };
 
-function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
+function BlockFaceMaterial({ texture, tint, colorBoost = false }: BlockFaceMaterialProps) {
   const applyBaseFog = useCallback((shader: Parameters<MeshStandardMaterial["onBeforeCompile"]>[0]) => {
     shader.uniforms.uBlockBaseFogColor = { value: BLOCK_BASE_FOG_COLOR };
-    shader.uniforms.uBlockBaseFogBottomY = { value: BLOCK_BASE_FOG_BOTTOM_Y };
-    shader.uniforms.uBlockBaseFogTopY = { value: BLOCK_BASE_FOG_TOP_Y };
-    shader.uniforms.uBlockBaseVoidBottomY = { value: BLOCK_BASE_VOID_BOTTOM_Y };
-    shader.uniforms.uBlockBaseVoidTopY = { value: BLOCK_BASE_VOID_TOP_Y };
-    shader.uniforms.uBlockDistanceFogNear = { value: BLOCK_DISTANCE_FOG_NEAR };
-    shader.uniforms.uBlockDistanceFogFar = { value: BLOCK_DISTANCE_FOG_FAR };
-    shader.uniforms.uBlockDistanceVoidNear = { value: BLOCK_DISTANCE_VOID_NEAR };
-    shader.uniforms.uBlockDistanceVoidFar = { value: BLOCK_DISTANCE_VOID_FAR };
+    shader.uniforms.uBlockBaseFogBottomY = {
+      value: colorBoost ? MOBILE_BLOCK_BASE_FOG_BOTTOM_Y : BLOCK_BASE_FOG_BOTTOM_Y,
+    };
+    shader.uniforms.uBlockBaseFogTopY = {
+      value: colorBoost ? MOBILE_BLOCK_BASE_FOG_TOP_Y : BLOCK_BASE_FOG_TOP_Y,
+    };
+    shader.uniforms.uBlockBaseVoidBottomY = {
+      value: colorBoost ? MOBILE_BLOCK_BASE_VOID_BOTTOM_Y : BLOCK_BASE_VOID_BOTTOM_Y,
+    };
+    shader.uniforms.uBlockBaseVoidTopY = {
+      value: colorBoost ? MOBILE_BLOCK_BASE_VOID_TOP_Y : BLOCK_BASE_VOID_TOP_Y,
+    };
+    shader.uniforms.uBlockDistanceFogNear = {
+      value: colorBoost ? MOBILE_BLOCK_DISTANCE_FOG_NEAR : BLOCK_DISTANCE_FOG_NEAR,
+    };
+    shader.uniforms.uBlockDistanceFogFar = {
+      value: colorBoost ? MOBILE_BLOCK_DISTANCE_FOG_FAR : BLOCK_DISTANCE_FOG_FAR,
+    };
+    shader.uniforms.uBlockDistanceVoidNear = {
+      value: colorBoost ? MOBILE_BLOCK_DISTANCE_VOID_NEAR : BLOCK_DISTANCE_VOID_NEAR,
+    };
+    shader.uniforms.uBlockDistanceVoidFar = {
+      value: colorBoost ? MOBILE_BLOCK_DISTANCE_VOID_FAR : BLOCK_DISTANCE_VOID_FAR,
+    };
 
     shader.vertexShader = shader.vertexShader
       .replace(
@@ -247,16 +360,16 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
           "if (gl_FragColor.a < 0.015) discard;",
         ].join("\n"),
       );
-  }, []);
+  }, [colorBoost]);
 
   return (
     <meshStandardMaterial
       map={texture}
       color={tint}
       emissive={memoryBlocks.emissive}
-      emissiveIntensity={0.012}
+      emissiveIntensity={colorBoost ? 0.055 : 0.012}
       metalness={0.02}
-      roughness={0.68}
+      roughness={colorBoost ? 0.5 : 0.68}
       side={DoubleSide}
       transparent
       onBeforeCompile={applyBaseFog}
@@ -264,7 +377,7 @@ function BlockFaceMaterial({ texture, tint }: BlockFaceMaterialProps) {
   );
 }
 
-function BlockFace({ position, rotation, size, texture, tint }: BlockFaceProps) {
+function BlockFace({ position, rotation, size, texture, tint, colorBoost = false }: BlockFaceProps) {
   const faceTexture = useMemo(() => {
     const nextTexture = texture.clone();
     const repeat = [
@@ -287,7 +400,7 @@ function BlockFace({ position, rotation, size, texture, tint }: BlockFaceProps) 
   return (
     <mesh castShadow receiveShadow position={position} rotation={rotation}>
       <planeGeometry args={size} />
-      <BlockFaceMaterial texture={faceTexture} tint={tint} />
+      <BlockFaceMaterial texture={faceTexture} tint={tint} colorBoost={colorBoost} />
     </mesh>
   );
 }
@@ -295,9 +408,10 @@ function BlockFace({ position, rotation, size, texture, tint }: BlockFaceProps) 
 type MemoryBlockMeshProps = {
   block: MemoryBlock;
   texture: Texture;
+  colorBoost?: boolean;
 };
 
-function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
+function MemoryBlockMesh({ block, texture, colorBoost = false }: MemoryBlockMeshProps) {
   const [width, height, depth] = block.scale;
 
   return (
@@ -308,6 +422,7 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
         size={[width, depth]}
         texture={texture}
         tint={memoryBlocks.top}
+        colorBoost={colorBoost}
       />
       <BlockFace
         position={[0, -height / 2, 0]}
@@ -315,6 +430,7 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
         size={[width, depth]}
         texture={texture}
         tint={memoryBlocks.bottom}
+        colorBoost={colorBoost}
       />
       <BlockFace
         position={[0, 0, depth / 2]}
@@ -322,6 +438,7 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
         size={[width, height]}
         texture={texture}
         tint={memoryBlocks.front}
+        colorBoost={colorBoost}
       />
       <BlockFace
         position={[0, 0, -depth / 2]}
@@ -329,6 +446,7 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
         size={[width, height]}
         texture={texture}
         tint={memoryBlocks.back}
+        colorBoost={colorBoost}
       />
       <BlockFace
         position={[width / 2, 0, 0]}
@@ -336,6 +454,7 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
         size={[depth, height]}
         texture={texture}
         tint={memoryBlocks.right}
+        colorBoost={colorBoost}
       />
       <BlockFace
         position={[-width / 2, 0, 0]}
@@ -343,6 +462,7 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
         size={[depth, height]}
         texture={texture}
         tint={memoryBlocks.left}
+        colorBoost={colorBoost}
       />
     </group>
   );
@@ -350,9 +470,10 @@ function MemoryBlockMesh({ block, texture }: MemoryBlockMeshProps) {
 
 type MemoryBlocksProps = {
   blocks?: MemoryBlock[];
+  colorBoost?: boolean;
 };
 
-export function MemoryBlocks({ blocks: providedBlocks }: MemoryBlocksProps) {
+export function MemoryBlocks({ blocks: providedBlocks, colorBoost = false }: MemoryBlocksProps) {
   const generatedBlocks = useMemo(createMemoryBlocks, []);
   const blocks = providedBlocks ?? generatedBlocks;
   const texture = useTexture('/images/texture/concrete.jpg');
@@ -364,6 +485,7 @@ export function MemoryBlocks({ blocks: providedBlocks }: MemoryBlocksProps) {
           key={block.id}
           block={block}
           texture={texture}
+          colorBoost={colorBoost}
         />
       ))}
     </group>
