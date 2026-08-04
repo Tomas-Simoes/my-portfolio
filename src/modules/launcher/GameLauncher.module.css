@@ -1417,7 +1417,31 @@
   }
 
   .developmentDetails {
+    display: block;
+    margin-top: 10px;
+    padding-top: 8px;
+  }
+
+  .developmentDetails summary {
+    font-size: 0.7rem;
+  }
+
+  .developmentDetails div {
+    gap: 6px;
+    max-height: 92px;
+    margin-top: 8px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+
+  .developmentDetails div::-webkit-scrollbar {
     display: none;
+  }
+
+  .developmentDetails p {
+    font-size: 0.72rem;
+    line-height: 1.3;
   }
 
   .stack {
@@ -1589,6 +1613,15 @@
 
   .buildList strong {
     font-size: 0.78rem;
+  }
+
+  .developmentDetails {
+    margin-top: 8px;
+    padding-top: 7px;
+  }
+
+  .developmentDetails summary {
+    font-size: 0.66rem;
   }
 
   .stack,
