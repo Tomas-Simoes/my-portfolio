@@ -74,7 +74,7 @@ export const projects: Project[] = [
     year: '2023',
     timelineLabel: 'Year',
     role: 'Lead Developer',
-    buildMeta: 'Version 1.0.3 · Published July 2023',
+    buildMeta: 'Published July 2023',
     links: [
       {
         label: '▶ INSTALL',
@@ -118,7 +118,7 @@ export const projects: Project[] = [
   {
     id: 'acharya-measurement',
     title: 'Acharya Measurement',
-    detail: 'Indoor measurement · Machine learning',
+    detail: 'Machine learning',
     summary:
       'A computer-vision prototype for estimating indoor wall and window dimensions from photographs.',
     description:
@@ -140,11 +140,11 @@ export const projects: Project[] = [
         detail: 'Structured experiments, evaluated measurement accuracy and contributed results used in the published paper.',
       },
     ],
-    stack: ['Python', 'Ultralytics', 'YOLO', 'Geometry'],
+    stack: ['Python', 'Ultralytics', 'YOLO'],
     year: '2023',
     timelineLabel: 'Paper',
     role: 'Intern',
-    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
+    buildMeta: 'Published in 2023',
     links: [
       {
         label: '▶ VIEW PROJECT',
@@ -289,7 +289,7 @@ export const projects: Project[] = [
     year: '2026',
     timelineLabel: 'Year',
     role: 'Developer',
-    buildMeta: 'Live build · Version 1.0.3 · Updated July 2026',
+    buildMeta: 'Published July 2026',
     links: [
       {
         label: '▶ OPEN PROJECT',

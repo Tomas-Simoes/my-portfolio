@@ -812,7 +812,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
             <p className={styles.eyebrow}>Open Channels</p>
             <h1 id="network-heading">Network</h1>
             <p className={styles.bodyCopy}>
-              Code, career context, direct email, and CV. Email is the best public starting point; phone contact stays private until needed.
+              Find my work, professional background, and ways to get in touch!
             </p>
           </div>
 
