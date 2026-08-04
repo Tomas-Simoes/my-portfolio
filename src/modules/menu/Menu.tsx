@@ -536,10 +536,20 @@ export function Menu({ onOpenProjects, onLeave }: MenuProps) {
     void navSound.play().catch(() => undefined);
   }
 
+  function openProjects() {
+    playMenuNavSound();
+    onOpenProjects();
+  }
+
   function selectSection(nextSectionIndex: number) {
     const nextIndex = clampMenuIndex(nextSectionIndex, sections.length);
 
     if (nextIndex === activeSectionIndex) {
+      return;
+    }
+
+    if (sections[nextIndex].id === 'projects') {
+      openProjects();
       return;
     }
 
@@ -561,8 +571,7 @@ export function Menu({ onOpenProjects, onLeave }: MenuProps) {
 
   function openActiveEntry() {
     if (activeSection.id === 'projects') {
-      playMenuNavSound();
-      onOpenProjects();
+      openProjects();
       return;
     }
 
@@ -745,8 +754,7 @@ export function Menu({ onOpenProjects, onLeave }: MenuProps) {
               aria-pressed={sectionIndex === activeSectionIndex}
               onClick={() => {
                 if (section.id === 'projects') {
-                  playMenuNavSound();
-                  onOpenProjects();
+                  openProjects();
                   return;
                 }
 
