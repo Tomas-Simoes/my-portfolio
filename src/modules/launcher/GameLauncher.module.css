@@ -1329,12 +1329,43 @@
 
   .sidePanel {
     grid-column: auto;
-    order: 2;
-    gap: 0;
+    order: -1;
+    gap: 8px;
   }
 
   .previewPanel {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .previewWindow {
+    height: clamp(112px, 30vw, 156px);
+    max-height: 19vh;
+  }
+
+  .mediaStrip {
+    grid-auto-columns: minmax(58px, 1fr);
+    gap: 6px;
+    height: 32px;
+    scrollbar-width: none;
+  }
+
+  .mediaStrip::-webkit-scrollbar {
     display: none;
+  }
+
+  .previewFullscreenIcon {
+    top: 7px;
+    right: 7px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .previewFullscreenIcon svg {
+    width: 15px;
+    height: 15px;
   }
 
   .kicker {
@@ -1427,7 +1458,7 @@
   }
 
   .meta {
-    padding-top: 0;
+    display: none;
   }
 
   .meta dl {
@@ -1462,7 +1493,16 @@
 
   .card,
   .activeCard {
-    height: clamp(136px, 45vw, 190px);
+    height: clamp(120px, 36vw, 160px);
+  }
+
+  .previewWindow {
+    height: clamp(104px, 31vw, 132px);
+    max-height: 16vh;
+  }
+
+  .mediaStrip {
+    height: 30px;
   }
 
   .meta dl {
@@ -1505,7 +1545,20 @@
 
   .card,
   .activeCard {
-    height: clamp(118px, 38vw, 156px);
+    height: clamp(98px, 31vw, 128px);
+  }
+
+  .previewPanel {
+    padding: 6px;
+  }
+
+  .previewWindow {
+    height: clamp(82px, 27vw, 108px);
+    max-height: 15vh;
+  }
+
+  .mediaStrip {
+    height: 26px;
   }
 
   .carousel {

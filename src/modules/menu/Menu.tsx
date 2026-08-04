@@ -362,14 +362,11 @@ function Icon({ type }: { type: MenuIcon }) {
         <svg viewBox="0 0 48 48" aria-hidden="true">
           <path d="M12 12v24h26" />
           <path d="M17 32 25 22l6 5 7-11" />
-          <path d="M25 22h1" />
-          <path d="M31 27h1" />
-          <path d="M38 16h1" />
         </svg>
       );
     case 'skills':
       return (
-        <svg viewBox="0 0 48 48" aria-hidden="true">
+        <svg className={styles.cleanEndpointIcon} viewBox="0 0 48 48" aria-hidden="true">
           <path d="M15 11h18l5 9-14 19L10 20l5-9Z" />
           <path d="m10 20 14 4 14-4" />
           <path d="m15 11 9 13 9-13" />
@@ -377,7 +374,7 @@ function Icon({ type }: { type: MenuIcon }) {
       );
     case 'network':
       return (
-        <svg viewBox="0 0 48 48" aria-hidden="true">
+        <svg className={styles.cleanEndpointIcon} viewBox="0 0 48 48" aria-hidden="true">
           <path d="M24 38c7.7 0 14-6.3 14-14s-6.3-14-14-14-14 6.3-14 14 6.3 14 14 14Z" />
           <path d="M10 24h28" />
           <path d="M24 10c3.5 3.8 5.2 8.5 5.2 14S27.5 34.2 24 38" />

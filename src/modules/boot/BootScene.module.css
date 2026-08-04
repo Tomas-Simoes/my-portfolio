@@ -12,6 +12,28 @@
   inset: 0;
 }
 
+.menuStage {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.menuLayer {
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  z-index: 1;
+}
+
+.powerOffCurtain {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: auto;
+  background: #050607;
+  opacity: 0;
+  animation: powerOffFadeIn var(--power-off-fade-duration, 850ms) ease-in-out both;
+}
+
 .powerLayer {
   z-index: 2;
 }
@@ -36,5 +58,22 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes powerOffFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visibleBootLayer,
+  .powerOffCurtain {
+    animation-duration: 1ms;
   }
 }

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Project, ProjectMedia } from '../data/projects';
 import styles from '../GameLauncher.module.css';
-import { usePerformanceMode } from '../../../hooks/usePerformanceMode';
 
 const IMAGE_PREVIEW_DURATION_MS = 3500;
 
@@ -74,7 +73,6 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [fullscreenMedia, setFullscreenMedia] = useState<ProjectMedia | undefined>();
   const fullscreenCloseRef = useRef<HTMLButtonElement | null>(null);
-  const isPerformanceMode = usePerformanceMode();
   const coverMedia = project.coverImage
     ? ({ src: project.coverImage, type: 'image' } satisfies ProjectMedia)
     : undefined;
@@ -90,7 +88,6 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
   useEffect(() => {
     if (
       fullscreenMedia ||
-      isPerformanceMode ||
       !primaryPreview ||
       primaryPreview.type !== 'image' ||
       mediaStripItems.length < 2
@@ -103,7 +100,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
     }, IMAGE_PREVIEW_DURATION_MS);
 
     return () => window.clearTimeout(timer);
-  }, [fullscreenMedia, isPerformanceMode, mediaStripItems.length, primaryPreview]);
+  }, [fullscreenMedia, mediaStripItems.length, primaryPreview]);
 
   useEffect(() => {
     if (!fullscreenMedia) {
@@ -149,7 +146,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
       className={styles.previewImage}
       media={primaryPreview}
       onEnded={showNextMedia}
-      shouldAutoPlayVideo={!isPerformanceMode}
+      shouldAutoPlayVideo
     />
   ) : null;
 
@@ -251,7 +248,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                 >
                   <MediaThumb
                     media={media}
-                    shouldLoadVideoMetadata={!isPerformanceMode}
+                    shouldLoadVideoMetadata
                   />
                 </button>
               ))}

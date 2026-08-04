@@ -425,6 +425,7 @@
 }
 
 .categoryButton {
+  --category-icon-opacity: 0.48;
   min-width: 0;
   min-height: 98px;
   border: 0;
@@ -447,6 +448,7 @@
 
 .categoryButton:hover,
 .categoryButton:focus-visible {
+  --category-icon-opacity: 0.9;
   color: rgba(237, 232, 220, 0.9);
   background: rgba(237, 232, 220, 0.035);
 }
@@ -460,14 +462,21 @@
   width: clamp(36px, 4.4vw, 54px);
   height: clamp(36px, 4.4vw, 54px);
   fill: none;
-  stroke: currentColor;
+  stroke: rgb(237, 232, 220);
   stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+  opacity: var(--category-icon-opacity);
   filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.55));
   transition:
     filter 180ms ease,
+    opacity 180ms ease,
     transform 180ms ease;
+}
+
+.categoryButton .cleanEndpointIcon,
+.categoryButton .cleanEndpointIcon path {
+  stroke-linecap: butt;
 }
 
 .categoryButton span {
@@ -483,11 +492,13 @@
 }
 
 .activeCategoryButton {
+  --category-icon-opacity: 0.98;
   color: rgba(255, 250, 239, 0.98);
   transform: translateY(-10px);
 }
 
 .activeCategoryButton svg {
+  stroke: rgb(255, 250, 239);
   transform: scale(1.18);
   filter:
     drop-shadow(0 0 2px rgba(255, 250, 239, 0.8))
@@ -500,6 +511,7 @@
 }
 
 .leaveCategoryButton {
+  --category-icon-opacity: 0.5;
   color: rgba(237, 232, 220, 0.5);
 }
 
