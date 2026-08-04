@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Project, ProjectMedia } from '../data/projects';
 import styles from '../GameLauncher.module.css';
+import { usePerformanceMode } from '../../../hooks/usePerformanceMode';
 
 const IMAGE_PREVIEW_DURATION_MS = 3500;
 
@@ -12,10 +13,12 @@ function PreviewMedia({
   className,
   media,
   onEnded,
+  shouldAutoPlayVideo,
 }: {
   className: string;
   media: ProjectMedia;
   onEnded: () => void;
+  shouldAutoPlayVideo: boolean;
 }) {
   if (media.type === 'video') {
     return (
@@ -23,30 +26,55 @@ function PreviewMedia({
         key={media.src}
         className={className}
         src={media.src}
-        autoPlay
+        autoPlay={shouldAutoPlayVideo}
         muted
         playsInline
+        preload={shouldAutoPlayVideo ? 'auto' : 'metadata'}
         aria-hidden="true"
         onEnded={onEnded}
       />
     );
   }
 
-  return <img className={className} src={media.src} alt="" aria-hidden="true" />;
+  return (
+    <img
+      className={className}
+      src={media.src}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      decoding="async"
+    />
+  );
 }
 
-function MediaThumb({ media }: { media: ProjectMedia }) {
+function MediaThumb({
+  media,
+  shouldLoadVideoMetadata,
+}: {
+  media: ProjectMedia;
+  shouldLoadVideoMetadata: boolean;
+}) {
   if (media.type === 'video') {
-    return <video src={media.src} muted playsInline preload="metadata" aria-hidden="true" />;
+    return (
+      <video
+        src={media.src}
+        muted
+        playsInline
+        preload={shouldLoadVideoMetadata ? 'metadata' : 'none'}
+        aria-hidden="true"
+      />
+    );
   }
 
-  return <img src={media.src} alt="" aria-hidden="true" />;
+  return <img src={media.src} alt="" aria-hidden="true" loading="lazy" decoding="async" />;
 }
 
 export function ProjectDetails({ project }: ProjectDetailsProps) {
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [fullscreenMedia, setFullscreenMedia] = useState<ProjectMedia | undefined>();
   const fullscreenCloseRef = useRef<HTMLButtonElement | null>(null);
+  const isPerformanceMode = usePerformanceMode();
   const coverMedia = project.coverImage
     ? ({ src: project.coverImage, type: 'image' } satisfies ProjectMedia)
     : undefined;
@@ -62,6 +90,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
   useEffect(() => {
     if (
       fullscreenMedia ||
+      isPerformanceMode ||
       !primaryPreview ||
       primaryPreview.type !== 'image' ||
       mediaStripItems.length < 2
@@ -74,7 +103,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
     }, IMAGE_PREVIEW_DURATION_MS);
 
     return () => window.clearTimeout(timer);
-  }, [fullscreenMedia, mediaStripItems.length, primaryPreview]);
+  }, [fullscreenMedia, isPerformanceMode, mediaStripItems.length, primaryPreview]);
 
   useEffect(() => {
     if (!fullscreenMedia) {
@@ -120,6 +149,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
       className={styles.previewImage}
       media={primaryPreview}
       onEnded={showNextMedia}
+      shouldAutoPlayVideo={!isPerformanceMode}
     />
   ) : null;
 
@@ -219,7 +249,10 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                       : `image ${String(mediaIndex).padStart(2, '0')}`
                   }`}
                 >
-                  <MediaThumb media={media} />
+                  <MediaThumb
+                    media={media}
+                    shouldLoadVideoMetadata={!isPerformanceMode}
+                  />
                 </button>
               ))}
             </div>

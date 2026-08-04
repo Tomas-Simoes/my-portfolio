@@ -144,10 +144,10 @@ function separateBlocks(blocks: MemoryBlock[]) {
   return blocks;
 }
 
-export function createMemoryBlocks(): MemoryBlock[] {
+export function createMemoryBlocks(blockCount = BLOCK_COUNT): MemoryBlock[] {
   const blocks: MemoryBlock[] = [];
 
-  for (let i = 0; i < BLOCK_COUNT; i++) {
+  for (let i = 0; i < blockCount; i++) {
     const scale: Vector3 = [
       2,
       Math.random() * 25 + 15,

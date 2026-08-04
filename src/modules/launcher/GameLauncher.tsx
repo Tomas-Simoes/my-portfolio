@@ -4,6 +4,7 @@ import styles from './GameLauncher.module.css';
 import { GameCarousel } from './components/GameCarousel';
 import { ProjectDetails } from './components/ProjectDetails';
 import { createBackdropStyle, createLauncherThemeStyle } from './launcherThemeStyle';
+import { usePerformanceMode } from '../../hooks/usePerformanceMode';
 
 const MENU_STARTUP_SOUND = '/music/menu-startup.mp3';
 const MENU_NAV_SOUND = '/music/menu-nav.mp3';
@@ -22,8 +23,10 @@ export function GameLauncher({ onBackToMenu }: GameLauncherProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [startupPhase, setStartupPhase] = useState<StartupPhase>('waiting');
   const navSoundRef = useRef<HTMLAudioElement | null>(null);
+  const isPerformanceMode = usePerformanceMode();
   const activeProject = projects[activeIndex];
   const launcherThemeStyle = createLauncherThemeStyle(activeProject.theme);
+  const backdropProjects = isPerformanceMode ? [activeProject] : projects;
 
   useEffect(() => {
     const startupSound = new Audio(MENU_STARTUP_SOUND);
@@ -113,15 +116,16 @@ export function GameLauncher({ onBackToMenu }: GameLauncherProps) {
       className={launcherClassName}
       style={launcherThemeStyle}
       data-theme={activeProject.id}
+      data-performance-mode={isPerformanceMode ? 'true' : undefined}
     >
       <div className={styles.themeBackdrop} aria-hidden="true">
-        {projects.map((project, projectIndex) => {
+        {backdropProjects.map((project) => {
           const backdropStyle = createBackdropStyle(project.theme);
 
           return (
             <span
               key={project.id}
-              className={`${styles.themeBackdropLayer} ${projectIndex === activeIndex ? styles.activeThemeBackdropLayer : ''
+              className={`${styles.themeBackdropLayer} ${project.id === activeProject.id ? styles.activeThemeBackdropLayer : ''
                 }`}
               style={backdropStyle}
             />

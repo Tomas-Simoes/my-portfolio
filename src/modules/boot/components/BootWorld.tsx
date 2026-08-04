@@ -6,8 +6,15 @@ import { MemoryFog } from './MemoryFog';
 import { MemoryBlocks, createMemoryBlocks } from './MemoryBlocks';
 import { SignalBeacons } from './SignalBeacons';
 
-export function BootWorld() {
-  const memoryBlocks = useMemo(createMemoryBlocks, []);
+type BootWorldProps = {
+  performanceMode?: boolean;
+};
+
+export function BootWorld({ performanceMode = false }: BootWorldProps) {
+  const memoryBlocks = useMemo(
+    () => createMemoryBlocks(performanceMode ? 12 : undefined),
+    [performanceMode],
+  );
   const { world } = BOOT_SCENE_PALETTE;
 
   return (
@@ -24,13 +31,13 @@ export function BootWorld() {
       <directionalLight color={world.warmKey} intensity={1.14} position={[-7.5, 8.5, 5.8]} />
       <directionalLight color={world.coolRim} intensity={0.56} position={[6.2, 7.2, -6.8]} />
       <directionalLight
-        castShadow
+        castShadow={!performanceMode}
         color={world.shadowKey}
         intensity={0.86}
         position={[-3.5, 10.5, 2.2]}
         shadow-bias={-0.00028}
-        shadow-mapSize-height={1024}
-        shadow-mapSize-width={1024}
+        shadow-mapSize-height={performanceMode ? 512 : 1024}
+        shadow-mapSize-width={performanceMode ? 512 : 1024}
       />
       <pointLight
         color={world.emberPoint}
@@ -44,24 +51,28 @@ export function BootWorld() {
         intensity={2.05}
         position={[5.8, 3.2, -6.4]}
       />
-      <pointLight
-        color={world.violetPoint}
-        distance={20}
-        intensity={1.45}
-        position={[4.2, 5.2, 5.8]}
-      />
-      <pointLight
-        color={world.cyanPoint}
-        distance={18}
-        intensity={0.95}
-        position={[-4.5, 4.6, -5.2]}
-      />
+      {!performanceMode ? (
+        <>
+          <pointLight
+            color={world.violetPoint}
+            distance={20}
+            intensity={1.45}
+            position={[4.2, 5.2, 5.8]}
+          />
+          <pointLight
+            color={world.cyanPoint}
+            distance={18}
+            intensity={0.95}
+            position={[-4.5, 4.6, -5.2]}
+          />
+        </>
+      ) : null}
 
       <MemoryFog />
       <MemoryBlocks blocks={memoryBlocks} />
       {/*<SignalBeacons />*/}
       <BootCameraRig />
-      <BootPostEffects />
+      {!performanceMode ? <BootPostEffects /> : null}
     </>
   );
 }

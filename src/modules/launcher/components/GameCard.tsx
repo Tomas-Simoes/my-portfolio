@@ -28,6 +28,8 @@ export function GameCard({ project, isActive, onSelect }: GameCardProps) {
           src={project.coverImage}
           alt=""
           aria-hidden="true"
+          loading="lazy"
+          decoding="async"
         />
       ) : null}
       <span className={styles.cardCategory}>{project.category}</span>
