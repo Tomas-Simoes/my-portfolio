@@ -46,5 +46,22 @@ export function useSoundtrack() {
     }, MUSIC_DELAY_MS);
   }
 
-  return { start };
+  function stop() {
+    const music = musicRef.current;
+
+    if (delayRef.current !== null) {
+      window.clearTimeout(delayRef.current);
+      delayRef.current = null;
+    }
+
+    if (!music) {
+      return;
+    }
+
+    music.pause();
+    music.currentTime = 0;
+    music.muted = false;
+  }
+
+  return { start, stop };
 }

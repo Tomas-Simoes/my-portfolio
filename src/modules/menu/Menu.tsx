@@ -9,7 +9,7 @@ const STARTUP_ANIMATION_MS = 1800;
 const MENU_STARTUP_VOLUME = 0.45;
 const MENU_NAV_VOLUME = 0.42;
 
-type MenuIcon = 'profile' | 'projects' | 'timeline' | 'skills' | 'network';
+type MenuIcon = 'profile' | 'projects' | 'timeline' | 'skills' | 'network' | 'leave';
 type MenuActionIcon = 'github' | 'linkedin' | 'email' | 'cv' | 'external';
 type StartupPhase = 'waiting' | 'starting' | 'ready';
 
@@ -185,7 +185,7 @@ function createPortfolioSections(): MenuSection[] {
         },
         {
           id: 'timeline-2020',
-          label: '2020–2023',
+          label: '20–23',
           eyebrow: 'VOCATIONAL COURSE',
           title: 'Hello World!',
           body:
@@ -384,6 +384,13 @@ function Icon({ type }: { type: MenuIcon }) {
           <path d="M24 10c-3.5 3.8-5.2 8.5-5.2 14S20.5 34.2 24 38" />
         </svg>
       );
+    case 'leave':
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 8v16" />
+          <path d="M34.2 14.8A15 15 0 1 1 13.8 14.8" />
+        </svg>
+      );
   }
 }
 
@@ -459,9 +466,10 @@ function ActionIcon({ type = 'external' }: { type?: MenuActionIcon }) {
 
 type MenuProps = {
   onOpenProjects: () => void;
+  onLeave: () => void;
 };
 
-export function Menu({ onOpenProjects }: MenuProps) {
+export function Menu({ onOpenProjects, onLeave }: MenuProps) {
   const sections = useMemo(() => createPortfolioSections(), []);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [activeEntryIndex, setActiveEntryIndex] = useState(0);
@@ -574,6 +582,17 @@ export function Menu({ onOpenProjects }: MenuProps) {
     }
 
     window.open(actionHref, '_blank', 'noopener,noreferrer');
+  }
+
+  function leaveMenu() {
+    playMenuNavSound();
+    onLeave();
+  }
+
+  function handleLeaveKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.stopPropagation();
+    }
   }
 
   function revealActionHref(event: { currentTarget: HTMLAnchorElement }, action?: MenuAction) {
@@ -706,9 +725,7 @@ export function Menu({ onOpenProjects }: MenuProps) {
       </div>
 
       <header className={styles.statusBar}>
-        <strong className={styles.brandLogo}>
-          <img src="/images/logo.png" alt="Tomás Simões" />
-        </strong>
+        <strong>Tomás Simões</strong>
         <div className={styles.systemStatus}>
           <time dateTime={clock.toISOString()}>{formatMenuClock(clock)}</time>
           <span className={styles.signal} aria-hidden="true">
@@ -744,6 +761,17 @@ export function Menu({ onOpenProjects }: MenuProps) {
               <span>{section.label}</span>
             </button>
           ))}
+          <button
+            className={`${styles.categoryButton} ${styles.leaveCategoryButton}`}
+            type="button"
+            onClick={leaveMenu}
+            onKeyDown={handleLeaveKeyDown}
+            aria-label="Leave portfolio"
+            title="Leave"
+          >
+            <Icon type="leave" />
+            <span>Leave</span>
+          </button>
         </nav>
 
         {!isProfileSection && !isStackSection && !isNetworkSection ? (

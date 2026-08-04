@@ -29,6 +29,11 @@ export function BootScene() {
     setPhase('transitioning');
   }
 
+  function handlePowerOff() {
+    soundtrack.stop();
+    setPhase('off');
+  }
+
   useEffect(() => {
     if (phase !== 'transitioning') return;
 
@@ -78,5 +83,5 @@ export function BootScene() {
     return <GameLauncher onBackToMenu={() => setPhase('menu')} />;
   }
 
-  return <Menu onOpenProjects={() => setPhase('launcher')} />;
+  return <Menu onOpenProjects={() => setPhase('launcher')} onLeave={handlePowerOff} />;
 }

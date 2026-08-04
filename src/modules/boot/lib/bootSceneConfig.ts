@@ -7,9 +7,9 @@ export const BOOT_CAMERA = {
 };
 
 export const BOOT_MOBILE_CAMERA = {
-  position: [0, 39, 0] as [number, number, number],
+  position: [0, 36, 0] as [number, number, number],
   rotation: [-Math.PI / 2, 0, Math.PI] as [number, number, number],
-  fov: 76,
+  fov: 72,
   near: 0.1,
   far: 100,
 };

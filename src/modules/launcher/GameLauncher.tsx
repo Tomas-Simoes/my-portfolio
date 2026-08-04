@@ -139,9 +139,7 @@ export function GameLauncher({ onBackToMenu }: GameLauncherProps) {
               ← Menu
             </button>
           ) : null}
-          <strong className={styles.brandLogo}>
-            <img src="/images/logo.png" alt="Tomás Simões" />
-          </strong>
+          <strong>Tomás Simões</strong>
         </div>
       </header>
 

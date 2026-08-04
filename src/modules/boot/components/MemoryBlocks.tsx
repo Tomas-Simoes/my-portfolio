@@ -31,6 +31,15 @@ const BLOCK_DISTANCE_FOG_NEAR = 11;
 const BLOCK_DISTANCE_FOG_FAR = 24;
 const BLOCK_DISTANCE_VOID_NEAR = 16;
 const BLOCK_DISTANCE_VOID_FAR = 27;
+const MOBILE_BLOCK_COUNT = 14;
+const MOBILE_BLOCK_FIELD_RADIUS = 8.8;
+const MOBILE_BLOCK_CENTER_CLEARANCE_RADIUS = 2.05;
+const MOBILE_BLOCK_SEPARATION_GAP = 0.42;
+const MOBILE_BLOCK_WIDTH_MIN = 1.18;
+const MOBILE_BLOCK_WIDTH_MAX = 1.68;
+const MOBILE_BLOCK_HEIGHT_MIN = 11;
+const MOBILE_BLOCK_HEIGHT_MAX = 24;
+const MOBILE_POSITION_ATTEMPTS = 120;
 const MOBILE_BLOCK_BASE_FOG_BOTTOM_Y = 3.8;
 const MOBILE_BLOCK_BASE_FOG_TOP_Y = 13.8;
 const MOBILE_BLOCK_BASE_VOID_BOTTOM_Y = 2.6;
@@ -39,111 +48,49 @@ const MOBILE_BLOCK_DISTANCE_FOG_NEAR = 26;
 const MOBILE_BLOCK_DISTANCE_FOG_FAR = 58;
 const MOBILE_BLOCK_DISTANCE_VOID_NEAR = 42;
 const MOBILE_BLOCK_DISTANCE_VOID_FAR = 70;
-const MOBILE_MEMORY_BLOCKS: MemoryBlock[] = [
-  {
-    id: "mobile-block-0",
-    position: [-6.8, FLOOR_Y, -10.6],
-    rotation: [0, 0, 0],
-    scale: [1.45, 18, 1.45],
-  },
-  {
-    id: "mobile-block-1",
-    position: [6.4, FLOOR_Y, -9.4],
-    rotation: [0, 0, 0],
-    scale: [1.45, 15, 1.45],
-  },
-  {
-    id: "mobile-block-2",
-    position: [-7.6, FLOOR_Y, -4.2],
-    rotation: [0, 0, 0],
-    scale: [1.35, 14, 1.35],
-  },
-  {
-    id: "mobile-block-3",
-    position: [7.8, FLOOR_Y, -3.1],
-    rotation: [0, 0, 0],
-    scale: [1.35, 17, 1.35],
-  },
-  {
-    id: "mobile-block-4",
-    position: [-8.2, FLOOR_Y, 2.7],
-    rotation: [0, 0, 0],
-    scale: [1.45, 13, 1.45],
-  },
-  {
-    id: "mobile-block-5",
-    position: [8.4, FLOOR_Y, 2.4],
-    rotation: [0, 0, 0],
-    scale: [1.45, 16, 1.45],
-  },
-  {
-    id: "mobile-block-6",
-    position: [-5.9, FLOOR_Y, 8.5],
-    rotation: [0, 0, 0],
-    scale: [1.35, 15, 1.35],
-  },
-  {
-    id: "mobile-block-7",
-    position: [5.8, FLOOR_Y, 9.5],
-    rotation: [0, 0, 0],
-    scale: [1.35, 19, 1.35],
-  },
-  {
-    id: "mobile-block-8",
-    position: [-2.6, FLOOR_Y, -13.2],
-    rotation: [0, 0, 0],
-    scale: [1.3, 12, 1.3],
-  },
-  {
-    id: "mobile-block-9",
-    position: [2.7, FLOOR_Y, 13.1],
-    rotation: [0, 0, 0],
-    scale: [1.3, 14, 1.3],
-  },
-  {
-    id: "mobile-block-10",
-    position: [-9.5, FLOOR_Y, -0.8],
-    rotation: [0, 0, 0],
-    scale: [1.25, 11, 1.25],
-  },
-  {
-    id: "mobile-block-11",
-    position: [9.7, FLOOR_Y, -0.9],
-    rotation: [0, 0, 0],
-    scale: [1.25, 12.5, 1.25],
-  },
-];
+
+function randomRange(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
 
 function getBlockFootprintRadius(scale: Vector3) {
   return Math.hypot(scale[0] / 2, scale[2] / 2);
 }
 
-function randomPositionCoordinate() {
-  return Math.random() * BLOCK_FIELD_RADIUS * 2 - BLOCK_FIELD_RADIUS;
+function randomPositionCoordinate(fieldRadius = BLOCK_FIELD_RADIUS) {
+  return Math.random() * fieldRadius * 2 - fieldRadius;
 }
 
-function positionClearsCenter(position: Vector3, scale: Vector3) {
-  const minDistance = CENTER_CLEARANCE_RADIUS + getBlockFootprintRadius(scale);
+function positionClearsCenter(
+  position: Vector3,
+  scale: Vector3,
+  centerClearanceRadius = CENTER_CLEARANCE_RADIUS,
+) {
+  const minDistance = centerClearanceRadius + getBlockFootprintRadius(scale);
   const [x, , z] = position;
 
   return x * x + z * z >= minDistance * minDistance;
 }
 
-function createBlockPosition(scale: Vector3): Vector3 {
+function createBlockPosition(
+  scale: Vector3,
+  fieldRadius = BLOCK_FIELD_RADIUS,
+  centerClearanceRadius = CENTER_CLEARANCE_RADIUS,
+): Vector3 {
   for (let attempt = 0; attempt < POSITION_ATTEMPTS; attempt++) {
     const position: Vector3 = [
-      randomPositionCoordinate(),
+      randomPositionCoordinate(fieldRadius),
       FLOOR_Y,
-      randomPositionCoordinate(),
+      randomPositionCoordinate(fieldRadius),
     ];
 
-    if (positionClearsCenter(position, scale)) {
+    if (positionClearsCenter(position, scale, centerClearanceRadius)) {
       return position;
     }
   }
 
-  const minDistance = CENTER_CLEARANCE_RADIUS + getBlockFootprintRadius(scale);
-  const distance = minDistance + Math.random() * Math.max(0, BLOCK_FIELD_RADIUS - minDistance);
+  const minDistance = centerClearanceRadius + getBlockFootprintRadius(scale);
+  const distance = minDistance + Math.random() * Math.max(0, fieldRadius - minDistance);
   const angle = Math.random() * Math.PI * 2;
 
   return [
@@ -153,9 +100,41 @@ function createBlockPosition(scale: Vector3): Vector3 {
   ];
 }
 
-function pushBlockOutOfCenter(block: MemoryBlock) {
+function createMobileBlockPosition(scale: Vector3): Vector3 {
+  const minDistance = MOBILE_BLOCK_CENTER_CLEARANCE_RADIUS + getBlockFootprintRadius(scale);
+
+  for (let attempt = 0; attempt < MOBILE_POSITION_ATTEMPTS; attempt++) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance =
+      minDistance +
+      Math.pow(Math.random(), 1.45) * Math.max(0, MOBILE_BLOCK_FIELD_RADIUS - minDistance);
+    const position: Vector3 = [
+      Math.cos(angle) * distance,
+      FLOOR_Y,
+      Math.sin(angle) * distance,
+    ];
+
+    if (positionClearsCenter(position, scale, MOBILE_BLOCK_CENTER_CLEARANCE_RADIUS)) {
+      return position;
+    }
+  }
+
+  const angle = Math.random() * Math.PI * 2;
+
+  return [
+    Math.cos(angle) * minDistance,
+    FLOOR_Y,
+    Math.sin(angle) * minDistance,
+  ];
+}
+
+function pushBlockOutOfCenter(
+  block: MemoryBlock,
+  centerClearanceRadius = CENTER_CLEARANCE_RADIUS,
+  separationGap = BLOCK_SEPARATION_GAP,
+) {
   const minDistance =
-    CENTER_CLEARANCE_RADIUS + getBlockFootprintRadius(block.scale) + BLOCK_SEPARATION_GAP;
+    centerClearanceRadius + getBlockFootprintRadius(block.scale) + separationGap;
   const x = block.position[0];
   const z = block.position[2];
   const distance = Math.hypot(x, z);
@@ -177,12 +156,20 @@ function pushBlockOutOfCenter(block: MemoryBlock) {
   block.position[2] = z * pushScale;
 }
 
-function keepCenterClear(blocks: MemoryBlock[]) {
-  blocks.forEach(pushBlockOutOfCenter);
+function keepCenterClear(
+  blocks: MemoryBlock[],
+  centerClearanceRadius = CENTER_CLEARANCE_RADIUS,
+  separationGap = BLOCK_SEPARATION_GAP,
+) {
+  blocks.forEach((block) => pushBlockOutOfCenter(block, centerClearanceRadius, separationGap));
 }
 
-function separateBlocks(blocks: MemoryBlock[]) {
-  keepCenterClear(blocks);
+function separateBlocks(
+  blocks: MemoryBlock[],
+  centerClearanceRadius = CENTER_CLEARANCE_RADIUS,
+  separationGap = BLOCK_SEPARATION_GAP,
+) {
+  keepCenterClear(blocks, centerClearanceRadius, separationGap);
 
   for (let pass = 0; pass < 40; pass++) {
     for (let i = 0; i < blocks.length; i++) {
@@ -190,8 +177,8 @@ function separateBlocks(blocks: MemoryBlock[]) {
         const a = blocks[i];
         const b = blocks[j];
 
-        const minXDistance = a.scale[0] / 2 + b.scale[0] / 2 + BLOCK_SEPARATION_GAP;
-        const minZDistance = a.scale[2] / 2 + b.scale[2] / 2 + BLOCK_SEPARATION_GAP;
+        const minXDistance = a.scale[0] / 2 + b.scale[0] / 2 + separationGap;
+        const minZDistance = a.scale[2] / 2 + b.scale[2] / 2 + separationGap;
 
         const dx = b.position[0] - a.position[0];
         const dz = b.position[2] - a.position[2];
@@ -214,13 +201,13 @@ function separateBlocks(blocks: MemoryBlock[]) {
             b.position[2] += push * direction;
           }
 
-          pushBlockOutOfCenter(a);
-          pushBlockOutOfCenter(b);
+          pushBlockOutOfCenter(a, centerClearanceRadius, separationGap);
+          pushBlockOutOfCenter(b, centerClearanceRadius, separationGap);
         }
       }
     }
 
-    keepCenterClear(blocks);
+    keepCenterClear(blocks, centerClearanceRadius, separationGap);
   }
 
   return blocks;
@@ -247,17 +234,30 @@ export function createMemoryBlocks(blockCount = BLOCK_COUNT): MemoryBlock[] {
   return separateBlocks(blocks);
 }
 
-function cloneVector3(vector: Vector3): Vector3 {
-  return [vector[0], vector[1], vector[2]];
-}
-
 export function createMobileMemoryBlocks(): MemoryBlock[] {
-  return MOBILE_MEMORY_BLOCKS.map((block) => ({
-    ...block,
-    position: cloneVector3(block.position),
-    rotation: cloneVector3(block.rotation),
-    scale: cloneVector3(block.scale),
-  }));
+  const blocks: MemoryBlock[] = [];
+
+  for (let i = 0; i < MOBILE_BLOCK_COUNT; i++) {
+    const width = randomRange(MOBILE_BLOCK_WIDTH_MIN, MOBILE_BLOCK_WIDTH_MAX);
+    const scale: Vector3 = [
+      width,
+      randomRange(MOBILE_BLOCK_HEIGHT_MIN, MOBILE_BLOCK_HEIGHT_MAX),
+      width,
+    ];
+
+    blocks.push({
+      id: `mobile-block-${i}`,
+      position: createMobileBlockPosition(scale),
+      rotation: [0, 0, 0],
+      scale,
+    });
+  }
+
+  return separateBlocks(
+    blocks,
+    MOBILE_BLOCK_CENTER_CLEARANCE_RADIUS,
+    MOBILE_BLOCK_SEPARATION_GAP,
+  );
 }
 
 type BlockFaceProps = {
