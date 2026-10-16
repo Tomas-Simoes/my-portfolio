@@ -92,6 +92,11 @@ function createPortfolioSections(): MenuSection[] {
           meta: ['Software Development', 'Web Development', 'Quantum Computing'],
           actions: [
             {
+              label: 'View my CV',
+              href: PROFILE_LINKS.cv,
+              icon: 'cv',
+            },
+            {
               label: 'GitHub profile',
               href: PROFILE_LINKS.github,
               icon: 'github',
@@ -100,11 +105,6 @@ function createPortfolioSections(): MenuSection[] {
               label: 'LinkedIn profile',
               href: PROFILE_LINKS.linkedin,
               icon: 'linkedin',
-            },
-            {
-              label: 'CV',
-              href: PROFILE_LINKS.cv,
-              icon: 'cv',
             },
           ],
           image: PROFILE_IMAGE,
@@ -650,7 +650,9 @@ export function Menu({ onOpenProjects, onLeave }: MenuProps) {
         selectEntry(activeEntryIndex + 1);
         break;
       case 'Enter':
-        openActiveEntry();
+        if (event.target === event.currentTarget) {
+          openActiveEntry();
+        }
         break;
       default:
         break;
@@ -910,7 +912,10 @@ export function Menu({ onOpenProjects, onLeave }: MenuProps) {
               ))}
             </dl>
             {activeActions.length > 0 ? (
-              <div className={styles.actionList} aria-label={`${activeEntry.label} links`}>
+              <div
+                className={`${styles.actionList} ${isProfileSection ? styles.profileActionList : ''}`}
+                aria-label={`${activeEntry.label} links`}
+              >
                 {activeActions.map((action) => {
                   const actionHref = resolveActionHref(action);
 
@@ -919,18 +924,44 @@ export function Menu({ onOpenProjects, onLeave }: MenuProps) {
                   }
 
                   const isMailLink = actionHref.startsWith('mailto:');
+                  const isCvBadge = isProfileSection && action.icon === 'cv';
 
                   return (
                     <a
                       key={`${activeEntry.id}-${action.label}`}
-                      className={`${styles.actionButton} ${action.icon ? styles.iconActionButton : ''}`}
+                      className={isCvBadge
+                        ? styles.cvBadge
+                        : `${styles.actionButton} ${action.icon ? styles.iconActionButton : ''}`}
                       href={actionHref}
                       target={isMailLink ? undefined : '_blank'}
                       rel={isMailLink ? undefined : 'noreferrer'}
-                      aria-label={action.label}
+                      aria-label={isCvBadge ? 'View my CV (PDF, opens in a new tab)' : action.label}
                       title={action.label}
                     >
-                      {action.icon ? <ActionIcon type={action.icon} /> : action.label}
+                      {isCvBadge ? (
+                        <>
+                          <span className={styles.cvBadgeIcon}>
+                            <ActionIcon type="cv" />
+                          </span>
+                          <span className={styles.cvBadgeCopy}>
+                            <span>Curriculum Vitae</span>
+                            <strong>{action.label}</strong>
+                          </span>
+                          <span className={styles.cvBadgeFormat}>PDF</span>
+                          <svg
+                            className={styles.cvBadgeArrow}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M6 18 18 6M6 6h12v12" />
+                          </svg>
+                        </>
+                      ) : action.icon ? <ActionIcon type={action.icon} /> : action.label}
                     </a>
                   );
                 })}
